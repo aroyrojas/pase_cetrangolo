@@ -149,7 +149,15 @@ import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} f
 import {getFirestore,collection,doc,addDoc,setDoc,updateDoc,onSnapshot} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 import {getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js';
 
-const cfg={apiKey:"AIzaSyAbLNnPOZTcp8WpKmiWnRqruOdmrLtyIkE",authDomain:"pase-cirugia-cetra.firebaseapp.com",projectId:"pase-cirugia-cetra",appId:"1:430963773694:web:3c753dfcdec353cfb495af"};
+const firebaseConfig = {
+  apiKey: "AIzaSyAbLNnPOZTcp8WpKmiWnRqruOdmrLtyIkE",
+  authDomain: "pase-cirugia-cetra.firebaseapp.com",
+  databaseURL: "https://pase-cirugia-cetra-default-rtdb.firebaseio.com",
+  projectId: "pase-cirugia-cetra",
+  storageBucket: "pase-cirugia-cetra.firebasestorage.app",
+  messagingSenderId: "430963773694",
+  appId: "1:430963773694:web:3c753dfcdec353cfb495af"
+};
 const FIELDS=[
  {k:'cama',l:'Cama',t:'text'},{k:'paciente',l:'Paciente',t:'text'},{k:'dni',l:'DNI',t:'text'},
  {k:'nacimiento',l:'F. Nacimiento',t:'date'},{k:'ingreso',l:'Ingreso',t:'date'},
