@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pase de sala</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f7f8;--card:#fff;--ink:#13262b;--mute:#587076;--line:#d3dfe2;--acc:#0a6b76;--acc-ink:#fff;--tint:#e2f0f2;--warn:#7a4f00;--warn-bg:#fbeecb;--bad:#a1281f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1a1d;--card:#142428;--ink:#e4eff1;--mute:#8fa8ae;--line:#253f45;--acc:#52c2ce;--acc-ink:#04262a;--tint:#183338;--warn:#f0c46a;--warn-bg:#382c10;--bad:#ff9b8f}}
+:root[data-theme="dark"]{--bg:#0d1a1d;--card:#142428;--ink:#e4eff1;--mute:#8fa8ae;--line:#253f45;--acc:#52c2ce;--acc-ink:#04262a;--tint:#183338;--warn:#f0c46a;--warn-bg:#382c10;--bad:#ff9b8f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:.85rem 1rem}
+.bar{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center}
+h1{font-size:1.3rem;font-weight:700;margin:0;letter-spacing:-.01em}
+.count{color:var(--mute);font-size:.9rem;flex:1 1 auto}
+.search{flex:1 1 100%;min-width:0}
+input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem}
+textarea{min-height:4.6rem;resize:vertical}
+input:disabled,textarea:disabled{opacity:.85;background:var(--bg)}
+.btn{font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--card);padding:.55rem .95rem;cursor:pointer}
+.btn:hover{border-color:var(--acc)}
+.btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+main{max-width:1100px;margin:0 auto;padding:1rem}
+.note{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:.6rem .8rem;margin-bottom:.8rem;font-size:.9rem}
+.grid{display:grid;grid-template-columns:4.2rem minmax(9rem,1.1fr) 7.5rem minmax(0,2fr) minmax(0,2fr);gap:.25rem 1rem;align-items:start}
+.cols{padding:0 calc(1rem + 1px) .4rem;color:var(--mute);font-size:.82rem;font-weight:600}
+.row{display:grid;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;cursor:pointer}
+.row:hover{border-color:var(--acc)}
+.bed{display:grid;place-items:center;min-height:2.6rem;border-radius:8px;background:var(--tint);color:var(--acc);font-weight:700;font-size:1.15rem;overflow:hidden}
+.row.alta .bed{background:var(--warn-bg);color:var(--warn)}
+.name{font-weight:600}
+.sub{font-size:.8rem;color:var(--mute)}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;border-radius:999px;padding:.05rem .55rem;background:var(--warn-bg);color:var(--warn)}
+.clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--mute)}
+.empty{text-align:center;color:var(--mute);padding:3rem 1rem}
+@media (max-width:760px){
+.cols{display:none}
+.grid{grid-template-columns:3.6rem 1fr;gap:.15rem .8rem}
+.bed{grid-row:span 4;min-height:3.2rem}
+.ing::before,.clamp[data-l]::before{content:attr(data-l) ": ";font-weight:600}
+.clamp:empty{display:none}
+}
+#scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:9}
+#panel{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);z-index:10;display:flex;flex-direction:column;background:var(--card);border-left:1px solid var(--line)}
+.ph{padding:calc(.9rem + env(safe-area-inset-top,0px)) 1rem .8rem;border-bottom:1px solid var(--line)}
+.ph h2{margin:0;font-size:1.15rem}
+.pb{flex:1;overflow:auto;padding:1rem;display:grid;gap:.85rem;align-content:start}
+.f3{display:grid;grid-template-columns:6rem 1fr 9.5rem;gap:.75rem}
+label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
+.pf{border-top:1px solid var(--line);padding:.8rem 1rem calc(.8rem + env(safe-area-inset-bottom,0px));display:grid;gap:.6rem}
+.acts,.altabox{display:flex;flex-wrap:wrap;gap:.5rem;align-items:end}
+.altabox input{width:10rem}
+#msg{margin:0;font-size:.88rem;color:var(--mute)}
+#msg.err{color:var(--bad)}
+@media (max-width:520px){.f3{grid-template-columns:5rem 1fr}.f3 .date{grid-column:1/-1}}
+#gate{min-height:70vh;display:grid;place-content:center;justify-items:center;text-align:center;gap:.8rem;padding:2rem;max-width:30rem;margin:0 auto}
+#gate p{margin:0;color:var(--mute)}
+.urow{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.7rem 1rem;margin-bottom:.5rem}
+.tag.ok{background:var(--tint);color:var(--acc)}
+</style>
+</head>
+<body>
+<section id="gate"><h1 id="gh">Pase de sala</h1><p id="gp">Cargando…</p><button class="btn pri" id="gin" type="button" hidden>Ingresar con Google</button><button class="btn" id="gout" type="button" hidden>Salir</button></section>
+<header class="top" id="top" hidden>
+  <div class="bar">
+    <h1>Pase de sala</h1>
+    <span class="count" id="count" aria-live="polite"></span>
+    <button class="btn pri" id="new" type="button" hidden>Nuevo paciente</button>
+    <button class="btn" id="adminBtn" type="button" hidden>Usuarios</button>
+    <button class="btn" id="out" type="button">Salir</button>
+    <input class="search" id="q" type="search" placeholder="Buscar por paciente, cama o cualquier dato (incluye altas)" autocomplete="off" aria-label="Buscar pacientes">
+  </div>
+</header>
+<main id="main" hidden>
+  <div class="note" id="ro" hidden>Modo lectura: podés ver y buscar pacientes, pero no editarlos.</div>
+  <div id="list"><p class="empty">Cargando pacientes…</p></div>
+  <div id="users" hidden></div>
+</main>
+<div id="scrim" hidden></div>
+<aside id="panel" hidden aria-label="Ficha del paciente">
+  <div class="ph"><h2 id="ptitle"></h2><div class="sub" id="pstate"></div></div>
+  <div class="pb"><div class="f3" id="f3"></div><div id="fbig" style="display:grid;gap:.85rem"></div></div>
+  <div class="pf">
+    <div class="altabox" id="altaBox" hidden>
+      <div><label for="altaDate">Fecha de alta</label><input type="date" id="altaDate"></div>
+      <button class="btn pri" id="altaOk" type="button">Confirmar alta</button>
+      <button class="btn" id="altaNo" type="button">Cancelar</button>
+    </div>
+    <div class="acts">
+      <button class="btn pri" id="save" type="button">Guardar</button>
+      <button class="btn" id="altaBtn" type="button">Dar de alta</button>
+      <button class="btn" id="reBtn" type="button">Reingresar</button>
+      <button class="btn" id="close" type="button">Cerrar</button>
+    </div>
+    <p id="msg" role="status"></p>
+  </div>
+</aside>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {getFirestore,collection,doc,addDoc,setDoc,updateDoc,onSnapshot} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+// Pegá acá los datos de tu proyecto Firebase (ver README.md)
+const cfg={apiKey:'PEGAR',authDomain:'PEGAR',projectId:'PEGAR',appId:'PEGAR'};
+const FIELDS=[
+ {k:'cama',l:'Cama',t:'text'},{k:'paciente',l:'Paciente',t:'text'},{k:'ingreso',l:'Ingreso',t:'date'},
+ {k:'antecedentes',l:'Antecedentes'},{k:'enfermedadActual',l:'Antecedentes enfermedad actual'},
+ {k:'cirugia',l:'Cirugía'},{k:'estudios',l:'Estudios'},{k:'cultivos',l:'Cultivos'},{k:'tratamiento',l:'Tratamiento'}
+];
+const $=id=>document.getElementById(id);
+let col=null,canWrite=true,rows=[],loaded=false,q='',cur=null,orig={},busy=false;
+const norm=s=>(s==null?'':String(s)).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const fmt=s=>s?String(s).split('-').reverse().join('/'):'';
+const days=s=>{if(!s)return 0;const n=Math.round((new Date(today()+'T00:00:00')-new Date(s+'T00:00:00'))/864e5)+1;return n>0?n:0};
+function div(cls,txt,label){const d=document.createElement('div');d.className=cls;d.textContent=txt||'';if(label)d.dataset.l=label;return d}
+function msg(t,err){const m=$('msg');m.textContent=t||'';m.className=err?'err':''}
+
+function render(){
+  const L=$('list');L.textContent='';
+  if(!loaded)return;
+  const nq=norm(q.trim());
+  const act=rows.filter(r=>r.estado!=='alta');
+  const list=(nq?rows.filter(r=>FIELDS.some(f=>norm(r[f.k]).includes(nq))):act).sort((a,b)=>{
+    const x=a.estado==='alta',y=b.estado==='alta';
+    if(x!==y)return x?1:-1;
+    if(x)return (b.fechaAlta||'').localeCompare(a.fechaAlta||'');
+    return (a.cama||'').localeCompare(b.cama||'',undefined,{numeric:true});
+  });
+  $('count').textContent=nq?list.length+(list.length===1?' resultado':' resultados')+' entre activos y altas':act.length+(act.length===1?' paciente internado':' pacientes internados');
+  if(!list.length){
+    const p=document.createElement('p');p.className='empty';
+    p.textContent=nq?'Sin resultados para «'+q.trim()+'».':(canWrite?'No hay pacientes internados. Cargá el primero con «Nuevo paciente».':'No hay pacientes internados.');
+    L.append(p);return;
+  }
+  const head=document.createElement('div');head.className='cols grid';
+  ['Cama','Paciente','Ingreso','Enfermedad actual','Tratamiento'].forEach(t=>head.append(div('',t)));
+  L.append(head);
+  list.forEach(r=>{
+    const alta=r.estado==='alta';
+    const b=document.createElement('button');b.type='button';b.className='row grid'+(alta?' alta':'');
+    const ing=div('ing',fmt(r.ingreso),'Ingreso');
+    const sub=div('sub','');
+    if(alta){const t=document.createElement('span');t.className='tag';t.textContent='Alta '+fmt(r.fechaAlta);sub.append(t)}
+    else{const n=days(r.ingreso);sub.textContent=n?'Día '+n:''}
+    ing.append(sub);
+    b.append(div('bed',r.cama||'—'),div('name',r.paciente||'Sin nombre'),ing,
+      div('clamp',r.enfermedadActual,'Enfermedad actual'),div('clamp',r.tratamiento,'Tratamiento'));
+    b.onclick=()=>openPanel(r.id);
+    L.append(b);
+  });
+}
+
+function build(){
+  FIELDS.forEach((x,i)=>{
+    const w=document.createElement('div');if(i===2)w.className='date';
+    const l=document.createElement('label');l.htmlFor='f_'+x.k;l.textContent=x.l;
+    const inp=document.createElement(x.t?'input':'textarea');inp.id='f_'+x.k;
+    if(x.t){inp.type=x.t;inp.autocomplete='off'}
+    if(x.k==='cama')inp.maxLength=12;
+    if(x.k==='paciente')inp.maxLength=120;
+    w.append(l,inp);(i<3?$('f3'):$('fbig')).append(w);
+  });
+}
+
+function openPanel(id){
+  const r=id?rows.find(x=>x.id===id):null;
+  cur=r||null;orig={};
+  FIELDS.forEach(x=>{const v=r?(r[x.k]||''):(x.k==='ingreso'?today():'');orig[x.k]=v;const e=$('f_'+x.k);e.value=v;e.disabled=!canWrite});
+  const alta=!!r&&r.estado==='alta';
+  $('ptitle').textContent=r?(r.paciente||'Sin nombre'):'Nuevo paciente';
+  $('pstate').textContent=alta?'Alta el '+fmt(r.fechaAlta):(r?'Internado · día '+days(r.ingreso):'');
+  $('save').hidden=!canWrite;
+  $('altaBtn').hidden=!canWrite||!r||alta;
+  $('reBtn').hidden=!canWrite||!alta;
+  $('altaBox').hidden=true;$('altaDate').value=today();msg('');
+  $('scrim').hidden=false;$('panel').hidden=false;
+  if(!r&&canWrite)$('f_cama').focus();
+}
+function closePanel(){$('panel').hidden=true;$('scrim').hidden=true;cur=null}
+
+async function save(extra){
+  if(!col||busy||!canWrite)return;
+  const vals={};FIELDS.forEach(x=>vals[x.k]=$('f_'+x.k).value.trim());
+  if(!cur&&!vals.cama&&!vals.paciente){msg('Completá al menos la cama o el paciente.',1);return}
+  busy=true;msg('Guardando…');
+  try{
+    if(!cur){await col.add(Object.assign({},vals,{estado:'activo',fechaAlta:'',creado:Date.now()},extra))}
+    else{
+      const ch=Object.assign({},extra);
+      FIELDS.forEach(x=>{if(vals[x.k]!==orig[x.k].trim())ch[x.k]=vals[x.k]});
+      if(Object.keys(ch).length)await col.doc(cur.id).update(ch);
+    }
+    closePanel();
+  }catch(e){
+    const c=e&&e.code;
+    msg(c==='permission-denied'?'No tenés permiso para modificar datos.':'No se pudo guardar. Probá de nuevo.',1);
+  }finally{busy=false}
+}
+
+build();
+$('q').addEventListener('input',e=>{q=e.target.value;render()});
+$('new').onclick=()=>openPanel(null);
+$('close').onclick=closePanel;$('scrim').onclick=closePanel;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('panel').hidden)closePanel()});
+$('save').onclick=()=>save({});
+$('altaBtn').onclick=()=>{$('altaBox').hidden=false;$('altaDate').focus()};
+$('altaNo').onclick=()=>{$('altaBox').hidden=true};
+$('altaOk').onclick=()=>save({estado:'alta',fechaAlta:$('altaDate').value||today()});
+$('reBtn').onclick=()=>save({estado:'activo',fechaAlta:''});
+
+const ok=!cfg.apiKey.startsWith('PEGAR');
+const app=ok?initializeApp(cfg):null,auth=ok?getAuth(app):null,db=ok?getFirestore(app):null;
+let off=[],offMe=()=>{},started=false,me=null,users=[],view='pac';
+
+function gate(h,p,mode){
+  closePanel();$('top').hidden=true;$('main').hidden=true;$('gate').hidden=false;
+  $('gh').textContent=h;$('gp').textContent=p;
+  $('gin').hidden=mode!=='in';$('gout').hidden=mode!=='out';
+}
+function stop(){off.forEach(f=>f());off=[];started=false;rows=[];loaded=false;users=[];col=null}
+function updateAdminBtn(){
+  const n=users.filter(x=>x.estado==='pendiente').length;
+  $('adminBtn').textContent=view==='pac'?'Usuarios'+(n?' ('+n+' pendientes)':''):'Pacientes';
+}
+function setView(v){
+  view=v;$('list').hidden=v!=='pac';$('users').hidden=v!=='usr';
+  $('q').hidden=v!=='pac';$('new').hidden=v!=='pac';
+  updateAdminBtn();
+  if(v==='usr'){$('count').textContent='Gestión de accesos';renderUsers()}else render();
+}
+function renderUsers(){
+  updateAdminBtn();
+  if(view!=='usr')return;
+  const U=$('users');U.textContent='';
+  const ord={pendiente:0,aprobado:1};
+  [...users].sort((a,b)=>(ord[a.estado]??2)-(ord[b.estado]??2)||(a.email||'').localeCompare(b.email||'')).forEach(u=>{
+    const r=div('urow','');
+    const info=div('','');info.append(div('name',u.nombre||u.email),div('sub',u.nombre?u.email:''));
+    const t=document.createElement('span');
+    t.className='tag'+(u.estado==='aprobado'?' ok':'');
+    t.textContent=u.estado==='aprobado'?(u.rol==='admin'?'Administrador':'Con acceso'):(u.estado==='pendiente'?'Pendiente':'Sin acceso');
+    const acts=div('acts','');
+    const set=(txt,patch,pri)=>{const b=document.createElement('button');b.type='button';b.className='btn'+(pri?' pri':'');b.textContent=txt;
+      b.onclick=()=>updateDoc(doc(db,'usuarios',u.id),patch).catch(()=>alert('No se pudo actualizar.'));acts.append(b)};
+    if(u.estado!=='aprobado')set('Dar acceso',{estado:'aprobado'},1);
+    else if(u.id!==me.email){
+      set(u.rol==='admin'?'Quitar administrador':'Hacer administrador',{rol:u.rol==='admin'?'usuario':'admin'});
+      set('Quitar acceso',{estado:'revocado'});
+    }
+    if(u.estado==='pendiente')set('Rechazar',{estado:'revocado'});
+    r.append(info,t,acts);U.append(r);
+  });
+}
+function start(u){
+  if(started)return;started=true;me=u;
+  $('gate').hidden=true;$('top').hidden=false;$('main').hidden=false;
+  $('adminBtn').hidden=u.rol!=='admin';
+  col={add:d=>addDoc(collection(db,'pacientes'),d),doc:id=>({update:d=>updateDoc(doc(db,'pacientes',id),d)})};
+  off.push(onSnapshot(collection(db,'pacientes'),s=>{rows=s.docs.map(d=>Object.assign({id:d.id},d.data()));loaded=true;render()},
+    ()=>{$('list').textContent='No se pudieron cargar los pacientes.'}));
+  if(u.rol==='admin')off.push(onSnapshot(collection(db,'usuarios'),s=>{users=s.docs.map(d=>Object.assign({id:d.id},d.data()));renderUsers()},()=>{}));
+  setView('pac');
+}
+
+$('gin').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(()=>{$('gp').textContent='No se pudo iniciar sesión. Probá de nuevo.'});
+$('gout').onclick=$('out').onclick=()=>signOut(auth);
+$('adminBtn').onclick=()=>setView(view==='pac'?'usr':'pac');
+
+if(!ok)gate('Falta configurar Firebase','Pegá los datos de tu proyecto en index.html (ver README.md).','none');
+else onAuthStateChanged(auth,user=>{
+  offMe();stop();
+  if(!user){gate('Pase de sala','Ingresá con tu cuenta de Gmail para continuar.','in');return}
+  const email=user.email.toLowerCase(),ref=doc(db,'usuarios',email);
+  gate('Verificando acceso…','','none');
+  offMe=onSnapshot(ref,s=>{
+    if(!s.exists()){
+      if(s.metadata.fromCache)return;
+      setDoc(ref,{email,nombre:user.displayName||'',estado:'pendiente',rol:'usuario',creado:Date.now()})
+        .catch(()=>gate('No se pudo enviar tu solicitud','Probá de nuevo más tarde.','out'));
+      return;
+    }
+    const u=s.data();
+    if(u.estado==='aprobado'){if(started&&me.rol===u.rol)return;stop();start(u)}
+    else{stop();
+      if(u.estado==='pendiente')gate('Solicitud enviada','Un administrador tiene que darte acceso. Esta pantalla se actualiza sola cuando lo haga.','out');
+      else gate('Sin acceso','Tu cuenta ('+email+') no tiene acceso. Consultá con el administrador.','out');
+    }
+  },()=>gate('Error de conexión','No se pudo verificar tu acceso.','out'));
+});
+</script>
+</body>
+</html>
