@@ -110,7 +110,7 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
   <button class="btn pri" id="new" type="button" hidden>Nuevo paciente</button>
   <button class="btn" id="adminBtn" type="button" hidden>Usuarios</button>
   <button class="btn" id="out" type="button" hidden>Salir</button>
-    <input class="search" id="q" type="search" placeholder="Buscar por paciente, cama o cualquier dato (incluye altas)" autocomplete="off" aria-label="Buscar pacientes">
+    <input class="search" id="q" type="search" placeholder="Buscar por paciente, cama o cualquier dato" autocomplete="off">
   </div>
 </header>
 <main id="main" hidden>
@@ -153,11 +153,18 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import {getFirestore,collection,doc,addDoc,setDoc,updateDoc,onSnapshot} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-// Importamos Firebase Storage
 import {getStorage, ref, uploadBytes, getDownloadURL, deleteObject} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js';
 
-// NOTA: Se agregó storageBucket a tu configuración original
-const cfg={apiKey:"AIzaSyAbLNnPOZTcp8WpKmiWnRqruOdmrLtyIkE",authDomain:"pase-cirugia-cetra.firebaseapp.com",projectId:"pase-cirugia-cetra",storageBucket:"pase-cirugia-cetra.appspot.com",appId:"1:430963773694:web:3c753dfcdec353cfb495af"};
+// ATENCIÓN ACÁ: Si tu Storage sigue sin funcionar luego de activarlo, 
+// verificá si tu storageBucket en la consola termina en ".firebasestorage.app" en vez de ".appspot.com"
+const cfg={
+  apiKey:"AIzaSyAbLNnPOZTcp8WpKmiWnRqruOdmrLtyIkE",
+  authDomain:"pase-cirugia-cetra.firebaseapp.com",
+  projectId:"pase-cirugia-cetra",
+  storageBucket:"pase-cirugia-cetra.appspot.com", 
+  appId:"1:430963773694:web:3c753dfcdec353cfb495af"
+};
+
 const FIELDS=[
  {k:'cama',l:'Cama',t:'text'},{k:'paciente',l:'Paciente',t:'text'},{k:'dni',l:'DNI',t:'text'},
  {k:'nacimiento',l:'F. Nacimiento',t:'date'},{k:'ingreso',l:'Ingreso',t:'date'},
@@ -165,6 +172,7 @@ const FIELDS=[
  {k:'cirugia',l:'Cirugía'},{k:'estudios',l:'Estudios'},{k:'cultivos',l:'Cultivos'},{k:'tratamiento',l:'Tratamiento'},
  {k:'pendientes',l:'Pendientes'}
 ];
+
 const $=id=>document.getElementById(id);
 let col=null,canWrite=true,rows=[],loaded=false,q='',cur=null,orig={},busy=false;
 const norm=s=>(s==null?'':String(s)).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -176,11 +184,19 @@ const ok=!cfg.apiKey.startsWith('PEGAR');
 const app=ok?initializeApp(cfg):null;
 const auth=ok?getAuth(app):null;
 const db=ok?getFirestore(app):null;
-const storage=ok?getStorage(app):null;
+
+// EVITA QUE LA APP SE CUELGUE SI STORAGE NO ESTÁ CONFIGURADO CORRECTAMENTE
+let storage = null;
+if (ok) {
+  try {
+    storage = getStorage(app);
+  } catch (error) {
+    console.warn("Firebase Storage no está activo o configurado correctamente. La subida de imágenes estará inhabilitada.", error);
+  }
+}
 
 let off=[],offMe=()=>{},started=false,me=null,users=[],view='pac';
 
-// Función para comprimir imágenes mediante Canvas HTML5
 async function compressImage(file) {
   if (!file.type.startsWith('image/')) return file;
   return new Promise((resolve) => {
@@ -204,7 +220,7 @@ async function compressImage(file) {
         ctx.drawImage(img, 0, 0, width, height);
         canvas.toBlob((blob) => {
           resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-        }, 'image/jpeg', 0.72); // Calidad 72%
+        }, 'image/jpeg', 0.72);
       };
     };
   });
@@ -383,7 +399,6 @@ function build(){
   });
 }
 
-// Función para renderizar los adjuntos actuales en el panel
 function renderAttachments() {
   const box = $('adjuntosPreview');
   box.innerHTML = '';
@@ -410,13 +425,17 @@ function renderAttachments() {
     delBtn.onclick = async (e) => {
       e.stopPropagation();
       if(!confirm('¿Borrar este archivo de la historia?')) return;
+      if(!storage){
+        alert("El sistema de almacenamiento no está activado.");
+        return;
+      }
       try {
         await deleteObject(ref(storage, arch.path));
         cur.archivos.splice(i, 1);
         await col.doc(cur.id).update({ archivos: cur.archivos });
         renderAttachments();
       } catch(error) {
-        alert('No se pudo borrar el archivo');
+        alert('No se pudo borrar el archivo desde Firebase');
       }
     };
 
@@ -424,7 +443,6 @@ function renderAttachments() {
     box.append(w);
   });
   
-  // Limpiamos el input y ocultamos si ya llegamos a 2 archivos
   $('f_adjuntos').value = '';
   if(archivosActuales.length >= 2){
     $('f_adjuntos').style.display = 'none';
@@ -453,16 +471,12 @@ function openPanel(id){
   });
   updateAgeDisplay();
   
-  // Manejo visual del Alta
   const alta=!!r&&r.estado==='alta';
   $('ptitle').textContent=r?(r.paciente\vert{}\vert{}'Sin nombre'):'Nuevo paciente';$('pstate').textContent=alta?'Alta el '+fmt(r.fechaAlta):(r?'Internado · día '+days(r.ingreso):'');
   $('save').hidden=!canWrite;
   $('altaBtn').hidden=!canWrite||!r||alta;
   $('reBtn').hidden=!canWrite||!alta;
-  $('altaBox').hidden=true;$('altaDate').value=today();msg('');
-  
-  // Mostrar la caja de adjuntos solo si se puede escribir y el paciente no esta de alta
-  $('attachBox').hidden = !canWrite || alta;
+  $('altaBox').hidden=true;$('altaDate').value=today();msg('');$('attachBox').hidden = !canWrite || alta;
   renderAttachments();
 
   if(r && r.modificadoPor){
@@ -507,13 +521,15 @@ async function save(extra){
   }
 
   busy=true;msg('Guardando…');
-  
   const now = Date.now();
   const author = me.nombre || me.email.split('@')[0];
 
   try {
-    // Si hay archivos para subir
     if(archivosNuevos.length > 0){
+      if(!storage){
+        msg('Error: No puedes subir fotos porque Storage no está activado en tu Firebase.', 1);
+        busy=false; return;
+      }
       msg('Subiendo y comprimiendo archivos...');
       for (let f of archivosNuevos) {
         let procesado = await compressImage(f);
@@ -531,13 +547,15 @@ async function save(extra){
       vals.archivos = archivosActuales;
     }
 
-    // Lógica para borrar los adjuntos si se confirma el alta
     if (extra.estado === 'alta' && cur && cur.archivos && cur.archivos.length > 0) {
       msg('Borrando archivos adjuntos (Alta médica)...');
       for (let arch of cur.archivos) {
-        try { await deleteObject(ref(storage, arch.path)); } catch(e) { console.error("No se pudo borrar: ", arch.path); }
+        if(storage) {
+          try { await deleteObject(ref(storage, arch.path)); } 
+          catch(e) { console.error("No se pudo borrar: ", arch.path); }
+        }
       }
-      extra.archivos = []; // Vaciamos el array
+      extra.archivos = [];
     }
 
     if(!cur){
