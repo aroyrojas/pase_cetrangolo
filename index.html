@@ -22,14 +22,15 @@ h1{font-size:1.3rem;font-weight:700;margin:0;letter-spacing:-.01em}
 .count{color:var(--mute);font-size:.9rem;flex:1 1 auto}
 .search{flex:1 1 100%;min-width:0}
 input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem}
-textarea{min-height:4.6rem;resize:vertical}
+textarea{min-height:4.6rem;resize:none;overflow:hidden} /* Modificado para auto-ajuste */
 input:disabled,textarea:disabled{opacity:.85;background:var(--bg)}
 .btn{font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--card);padding:.55rem .95rem;cursor:pointer}
 .btn:hover{border-color:var(--acc)}
 .btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
 main{max-width:1100px;margin:0 auto;padding:1rem}
 .note{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:.6rem .8rem;margin-bottom:.8rem;font-size:.9rem}
-.grid{display:grid;grid-template-columns:4.2rem minmax(9rem,1.1fr) 7.5rem minmax(0,2fr) minmax(0,2fr);gap:.25rem 1rem;align-items:start}
+/* Modificado: se agrega una columna más para "Pendientes" */
+.grid{display:grid;grid-template-columns:4.2rem minmax(9rem,1.1fr) 7.5rem minmax(0,2fr) minmax(0,2fr) minmax(0,2fr);gap:.25rem 1rem;align-items:start}
 .cols{padding:0 calc(1rem + 1px) .4rem;color:var(--mute);font-size:.82rem;font-weight:600}
 .row{display:grid;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;cursor:pointer}
 .row:hover{border-color:var(--acc)}
@@ -43,7 +44,8 @@ main{max-width:1100px;margin:0 auto;padding:1rem}
 @media (max-width:760px){
 .cols{display:none}
 .grid{grid-template-columns:3.6rem 1fr;gap:.15rem .8rem}
-.bed{grid-row:span 4;min-height:3.2rem}
+/* Modificado: abarca 5 filas ahora que hay un dato extra */
+.bed{grid-row:span 5;min-height:3.2rem}
 .ing::before,.clamp[data-l]::before{content:attr(data-l) ": ";font-weight:600}
 .clamp:empty{display:none}
 }
@@ -88,6 +90,7 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
   <div class="ph"><h2 id="ptitle"></h2><div class="sub" id="pstate"></div></div>
   <div class="pb"><div class="f3" id="f3"></div><div id="fbig" style="display:grid;gap:.85rem"></div></div>
   <div class="pf">
+    <div id="lastMod" class="sub" style="text-align: right; margin-bottom: 0.2rem; font-style: italic;"></div>
     <div class="altabox" id="altaBox" hidden>
       <div><label for="altaDate">Fecha de alta</label><input type="date" id="altaDate"></div>
       <button class="btn pri" id="altaOk" type="button">Confirmar alta</button>
@@ -111,7 +114,8 @@ const cfg={apiKey:"AIzaSyAbLNnPOZTcp8WpKmiWnRqruOdmrLtyIkE",authDomain:"pase-cir
 const FIELDS=[
  {k:'cama',l:'Cama',t:'text'},{k:'paciente',l:'Paciente',t:'text'},{k:'ingreso',l:'Ingreso',t:'date'},
  {k:'antecedentes',l:'Antecedentes'},{k:'enfermedadActual',l:'Antecedentes enfermedad actual'},
- {k:'cirugia',l:'Cirugía'},{k:'estudios',l:'Estudios'},{k:'cultivos',l:'Cultivos'},{k:'tratamiento',l:'Tratamiento'}
+ {k:'cirugia',l:'Cirugía'},{k:'estudios',l:'Estudios'},{k:'cultivos',l:'Cultivos'},{k:'tratamiento',l:'Tratamiento'},
+ {k:'pendientes',l:'Pendientes'} // NUEVO CAMPO AGREGADO
 ];
 const $=id=>document.getElementById(id);
 let col=null,canWrite=true,rows=[],loaded=false,q='',cur=null,orig={},busy=false;
@@ -140,7 +144,8 @@ function render(){
     L.append(p);return;
   }
   const head=document.createElement('div');head.className='cols grid';
-  ['Cama','Paciente','Ingreso','Enfermedad actual','Tratamiento'].forEach(t=>head.append(div('',t)));
+  // SE AGREGÓ "Pendientes" AL ENCABEZADO
+  ['Cama','Paciente','Ingreso','Enfermedad actual','Tratamiento','Pendientes'].forEach(t=>head.append(div('',t)));
   L.append(head);
   list.forEach(r=>{
     const alta=r.estado==='alta';
@@ -150,8 +155,9 @@ function render(){
     if(alta){const t=document.createElement('span');t.className='tag';t.textContent='Alta '+fmt(r.fechaAlta);sub.append(t)}
     else{const n=days(r.ingreso);sub.textContent=n?'Día '+n:''}
     ing.append(sub);
+    // SE AGREGÓ EL CLAMP DE PENDIENTES
     b.append(div('bed',r.cama||'—'),div('name',r.paciente||'Sin nombre'),ing,
-      div('clamp',r.enfermedadActual,'Enfermedad actual'),div('clamp',r.tratamiento,'Tratamiento'));
+      div('clamp',r.enfermedadActual,'Enfermedad actual'),div('clamp',r.tratamiento,'Tratamiento'),div('clamp',r.pendientes,'Pendientes'));
     b.onclick=()=>openPanel(r.id);
     L.append(b);
   });
@@ -163,6 +169,13 @@ function build(){
     const l=document.createElement('label');l.htmlFor='f_'+x.k;l.textContent=x.l;
     const inp=document.createElement(x.t?'input':'textarea');inp.id='f_'+x.k;
     if(x.t){inp.type=x.t;inp.autocomplete='off'}
+    else {
+      // AUTO-AJUSTE PARA TEXTAREAS
+      inp.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+      });
+    }
     if(x.k==='cama')inp.maxLength=12;
     if(x.k==='paciente')inp.maxLength=120;
     w.append(l,inp);(i<3?$('f3'):$('fbig')).append(w);
@@ -180,7 +193,29 @@ function openPanel(id){
   $('altaBtn').hidden=!canWrite||!r||alta;
   $('reBtn').hidden=!canWrite||!alta;
   $('altaBox').hidden=true;$('altaDate').value=today();msg('');
+  
+  // MOSTRAR ÚLTIMA MODIFICACIÓN
+  if(r && r.modificadoPor){
+    const d = new Date(r.modificadoEl);
+    const time = d.toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'});
+    $('lastMod').textContent = `Última act. por ${r.modificadoPor} el ${fmt(today() === r.modificadoEl ? '' : d.toISOString().split('T')[0])} a las ${time}`;
+  } else {
+    $('lastMod').textContent = '';
+  }
+
   $('scrim').hidden=false;$('panel').hidden=false;
+  
+  // REAJUSTAR TEXTAREAS AL ABRIR EL PANEL
+  requestAnimationFrame(() => {
+    FIELDS.forEach(x => {
+      if (!x.t) {
+        const el = $('f_' + x.k);
+        el.style.height = 'auto';
+        if (el.value) el.style.height = el.scrollHeight + 'px';
+      }
+    });
+  });
+
   if(!r&&canWrite)$('f_cama').focus();
 }
 function closePanel(){$('panel').hidden=true;$('scrim').hidden=true;cur=null}
@@ -190,12 +225,22 @@ async function save(extra){
   const vals={};FIELDS.forEach(x=>vals[x.k]=$('f_'+x.k).value.trim());
   if(!cur&&!vals.cama&&!vals.paciente){msg('Completá al menos la cama o el paciente.',1);return}
   busy=true;msg('Guardando…');
+  
+  const now = Date.now();
+  const author = me.nombre || me.email.split('@')[0]; // Toma el nombre o la primera parte del email
+
   try{
-    if(!cur){await col.add(Object.assign({},vals,{estado:'activo',fechaAlta:'',creado:Date.now()},extra))}
+    if(!cur){
+      await col.add(Object.assign({},vals,{estado:'activo',fechaAlta:'',creado:now, modificadoPor:author, modificadoEl:now},extra));
+    }
     else{
       const ch=Object.assign({},extra);
       FIELDS.forEach(x=>{if(vals[x.k]!==orig[x.k].trim())ch[x.k]=vals[x.k]});
-      if(Object.keys(ch).length)await col.doc(cur.id).update(ch);
+      if(Object.keys(ch).length){
+        ch.modificadoPor = author;
+        ch.modificadoEl = now;
+        await col.doc(cur.id).update(ch);
+      }
     }
     closePanel();
   }catch(e){
