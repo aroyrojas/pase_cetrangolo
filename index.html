@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Pase de sala de Cirugía</title>
+<title>Pase de sala</title>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f3f7f8;--card:#fff;--ink:#13262b;--mute:#587076;--line:#d3dfe2;--acc:#0a6b76;--acc-ink:#fff;--tint:#e2f0f2;--warn:#7a4f00;--warn-bg:#fbeecb;--bad:#a1281f;
@@ -18,7 +18,10 @@ button,input,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:.85rem 1rem}
 .bar{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center}
-h1{font-size:1.3rem;font-weight:700;margin:0;letter-spacing:-.01em}
+.brand{display:flex;align-items:center;gap:.75rem}
+.logo{height:2.8rem;width:auto;max-width:100px;object-fit:contain;border-radius:4px}
+.brand-title{display:flex;flex-direction:column;justify-content:center;line-height:1.15}
+.brand-title div{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
 .count{color:var(--mute);font-size:.9rem;flex:1 1 auto}
 .search{flex:1 1 100%;min-width:0}
 input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem}
@@ -72,7 +75,13 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
 <section id="gate"><h1 id="gh">Pase de sala</h1><p id="gp">Cargando…</p><button class="btn pri" id="gin" type="button" hidden>Ingresar con Google</button><button class="btn" id="gout" type="button" hidden>Salir</button></section>
 <header class="top" id="top" hidden>
   <div class="bar">
-    <h1>Pase de sala</h1>
+    <div class="brand">
+      <img src="Logo.jpg" alt="Logo Hospital Cetrángolo" class="logo" onerror="this.style.display='none'">
+      <div class="brand-title">
+        <div>Hospital Cetrángolo</div>
+        <div>Pase de Cirugía</div>
+      </div>
+    </div>
     <span class="count" id="count" aria-live="polite"></span>
     <button class="btn pri" id="new" type="button" hidden>Nuevo paciente</button>
     <button class="btn" id="adminBtn" type="button" hidden>Usuarios</button>
