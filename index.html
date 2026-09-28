@@ -31,13 +31,14 @@ button,input,textarea{font:inherit;color:inherit}
 .count{color:var(--mute);font-size:.9rem;flex:1 1 auto}
 .search{flex:1 1 100%;min-width:0}
 input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem}
-textarea{min-height:4.6rem;resize:none;overflow:hidden}
+textarea{min-height:4.6rem;resize:none;overflow:hidden} /* Modificado para auto-ajuste */
 input:disabled,textarea:disabled{opacity:.85;background:var(--bg)}
 .btn{font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--card);padding:.55rem .95rem;cursor:pointer}
 .btn:hover{border-color:var(--acc)}
 .btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
 main{max-width:1100px;margin:0 auto;padding:1rem}
 .note{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:.6rem .8rem;margin-bottom:.8rem;font-size:.9rem}
+/* Grilla actualizada a 3 columnas para simplificar la vista */
 .grid{display:grid;grid-template-columns:4.2rem minmax(9rem,1fr) 7.5rem;gap:.25rem 1rem;align-items:start}
 .cols{padding:0 calc(1rem + 1px) .4rem;color:var(--mute);font-size:.82rem;font-weight:600}
 .row{display:grid;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;cursor:pointer}
@@ -56,6 +57,7 @@ main{max-width:1100px;margin:0 auto;padding:1rem}
 @media (max-width:760px){
 .cols{display:none}
 .grid{grid-template-columns:3.6rem 1fr;gap:.15rem .8rem}
+/* Adaptado para los nuevos contenidos simplificados */
 .bed{grid-row:span 3;min-height:3.2rem}
 .ing::before,.clamp[data-l]::before{content:attr(data-l) ": ";font-weight:600}
 .clamp:empty{display:none}
@@ -68,8 +70,6 @@ main{max-width:1100px;margin:0 auto;padding:1rem}
 .fgrid1{display:grid;grid-template-columns:5.5rem 1fr 8.5rem;gap:.75rem;margin-bottom:.75rem}
 .fgrid2{display:grid;grid-template-columns:1fr 6rem 1fr;gap:.75rem}
 label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
-.photo-box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.75rem 1rem;margin-bottom:.75rem}
-#photoPreview{max-width:100%;max-height:200px;border-radius:6px;object-fit:cover;margin-bottom:.75rem;border:1px solid var(--line);background:var(--bg)}
 .pf{border-top:1px solid var(--line);padding:.8rem 1rem calc(.8rem + env(safe-area-inset-bottom,0px));display:grid;gap:.6rem}
 .acts,.altabox{display:flex;flex-wrap:wrap;gap:.5rem;align-items:end}
 .altabox input{width:10rem}
@@ -114,17 +114,7 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
 <div id="scrim" hidden></div>
 <aside id="panel" hidden aria-label="Ficha del paciente">
   <div class="ph"><h2 id="ptitle"></h2><div class="sub" id="pstate"></div></div>
-  <div class="pb">
-    <div class="f3" id="f3"></div>
-    
-    <div class="photo-box" id="photoBox">
-      <label for="photoInput">Foto del paciente</label>
-      <img id="photoPreview" hidden alt="Foto del paciente">
-      <input type="file" id="photoInput" accept="image/*">
-    </div>
-
-    <div id="fbig" style="display:grid;gap:.85rem"></div>
-  </div>
+  <div class="pb"><div class="f3" id="f3"></div><div id="fbig" style="display:grid;gap:.85rem"></div></div>
   <div class="pf">
     <div id="lastMod" class="sub" style="text-align: right; margin-bottom: 0.2rem; font-style: italic;"></div>
     <div class="altabox" id="altaBox" hidden>
@@ -145,17 +135,8 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import {getFirestore,collection,doc,addDoc,setDoc,updateDoc,onSnapshot} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-import {getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js';
 
-const cfg = {
-  apiKey: "AIzaSyAbLNnPOZTcp8WpKmiWnRqruOdmrLtyIkE",
-  authDomain: "pase-cirugia-cetra.firebaseapp.com",
-  databaseURL: "https://pase-cirugia-cetra-default-rtdb.firebaseio.com",
-  projectId: "pase-cirugia-cetra",
-  storageBucket: "pase-cirugia-cetra.firebasestorage.app",
-  messagingSenderId: "430963773694",
-  appId: "1:430963773694:web:3c753dfcdec353cfb495af"
-};
+const cfg={apiKey:"AIzaSyAbLNnPOZTcp8WpKmiWnRqruOdmrLtyIkE",authDomain:"pase-cirugia-cetra.firebaseapp.com",projectId:"pase-cirugia-cetra",appId:"1:430963773694:web:3c753dfcdec353cfb495af"};
 const FIELDS=[
  {k:'cama',l:'Cama',t:'text'},{k:'paciente',l:'Paciente',t:'text'},{k:'dni',l:'DNI',t:'text'},
  {k:'nacimiento',l:'F. Nacimiento',t:'date'},{k:'ingreso',l:'Ingreso',t:'date'},
@@ -164,7 +145,7 @@ const FIELDS=[
  {k:'pendientes',l:'Pendientes'}
 ];
 const $=id=>document.getElementById(id);
-let col=null,canWrite=true,rows=[],loaded=false,q='',cur=null,orig={},busy=false,selectedFile=null;
+let col=null,canWrite=true,rows=[],loaded=false,q='',cur=null,orig={},busy=false;
 const norm=s=>(s==null?'':String(s)).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const fmt=s=>s?String(s).split('-').reverse().join('/'):'';
@@ -352,21 +333,9 @@ function openPanel(id){
     }
   });
   updateAgeDisplay();
-  
-  selectedFile = null;
-  const pInput = $('photoInput');
-  if (pInput) pInput.value = '';
-  const pPrev = $('photoPreview');
-  if (r && r.fotoUrl) {
-    pPrev.src = r.fotoUrl;
-    pPrev.hidden = false;
-  } else {
-    pPrev.src = '';
-    pPrev.hidden = true;
-  }
-
   const alta=!!r&&r.estado==='alta';
-  $('ptitle').textContent=r?(r.paciente\vert{}\vert{}'Sin nombre'):'Nuevo paciente';$('pstate').textContent=alta?'Alta el '+fmt(r.fechaAlta):(r?'Internado · día '+days(r.ingreso):'');
+  $('ptitle').textContent=r?(r.paciente||'Sin nombre'):'Nuevo paciente';
+  $('pstate').textContent=alta?'Alta el '+fmt(r.fechaAlta):(r?'Internado · día '+days(r.ingreso):'');
   $('save').hidden=!canWrite;
   $('altaBtn').hidden=!canWrite||!r||alta;
   $('reBtn').hidden=!canWrite||!alta;
@@ -405,17 +374,13 @@ async function save(extra){
   busy=true;msg('Guardando…');
   
   const now = Date.now();
-  const author = me.nombre || me.email.split('@')[0];
-  const isAlta = extra.estado === 'alta';
+  const author = me.nombre || me.email.split('@')[0]; // Toma el nombre o la primera parte del email
 
   try{
-    let docId = cur ? cur.id : null;
-
     if(!cur){
       const newFields = Object.keys(vals).filter(k => vals[k] !== '' && k !== 'ingreso'); 
       if (vals['ingreso'] !== today()) newFields.push('ingreso');
-      const docRef = await col.add(Object.assign({},vals,{estado:'activo',fechaAlta:'',creado:now, modificadoPor:author, modificadoEl:now, lastModifiedFields: newFields},extra));
-      docId = docRef.id;
+      await col.add(Object.assign({},vals,{estado:'activo',fechaAlta:'',creado:now, modificadoPor:author, modificadoEl:now, lastModifiedFields: newFields},extra));
     }
     else{
       const ch=Object.assign({},extra);
@@ -426,57 +391,37 @@ async function save(extra){
           changedKeys.push(x.k);
         }
       });
-
-      if(isAlta && cur.fotoUrl){
-        try {
-          await deleteObject(sRef(storage, 'pacientes/' + docId));
-          ch.fotoUrl = '';
-        } catch(err) { console.error('Error al borrar foto', err); }
-      }
-
       if(Object.keys(ch).length){
         ch.modificadoPor = author;
         ch.modificadoEl = now;
         if (changedKeys.length > 0) {
           ch.lastModifiedFields = changedKeys;
         }
-        await col.doc(docId).update(ch);
+        await col.doc(cur.id).update(ch);
       }
     }
-
-    if (selectedFile && !isAlta) {
-      msg('Subiendo foto…');
-      const imgRef = sRef(storage, `pacientes/${docId}`);
-      await uploadBytes(imgRef, selectedFile);
-      const url = await getDownloadURL(imgRef);
-      await col.doc(docId).update({ fotoUrl: url, modificadoPor: author, modificadoEl: now });
-    }
-
     closePanel();
   }catch(e){
     const c=e&&e.code;
-    msg(c==='permission-denied'?'No tenés permiso para modificar datos.':(e.message||'No se pudo guardar. Probá de nuevo.'),1);
-    console.error(e);
+    msg(c==='permission-denied'?'No tenés permiso para modificar datos.':'No se pudo guardar. Probá de nuevo.',1);
   }finally{busy=false}
 }
 
 build();
-$('photoInput').addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (file) {
-    selectedFile = file;
-    $('photoPreview').src = URL.createObjectURL(file);$('photoPreview').hidden = false;
-  }
-});
 $('themeBtn').onclick=toggleTheme;
 updateThemeBtn();
-$('q').addEventListener('input',e=>{q=e.target.value;render()});$('new').onclick=()=>openPanel(null);
+$('q').addEventListener('input',e=>{q=e.target.value;render()});
+$('new').onclick=()=>openPanel(null);
 $('close').onclick=closePanel;$('scrim').onclick=closePanel;
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('panel').hidden)closePanel()});$('save').onclick=()=>save({});
-$('altaBtn').onclick=()=>{$('altaBox').hidden=false;$('altaDate').focus()};$('altaNo').onclick=()=>{$('altaBox').hidden=true};$('altaOk').onclick=()=>save({estado:'alta',fechaAlta:$('altaDate').value\vert{}\vert{}today()});$('reBtn').onclick=()=>save({estado:'activo',fechaAlta:''});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('panel').hidden)closePanel()});
+$('save').onclick=()=>save({});
+$('altaBtn').onclick=()=>{$('altaBox').hidden=false;$('altaDate').focus()};
+$('altaNo').onclick=()=>{$('altaBox').hidden=true};
+$('altaOk').onclick=()=>save({estado:'alta',fechaAlta:$('altaDate').value||today()});
+$('reBtn').onclick=()=>save({estado:'activo',fechaAlta:''});
 
 const ok=!cfg.apiKey.startsWith('PEGAR');
-const app=ok?initializeApp(cfg):null,auth=ok?getAuth(app):null,db=ok?getFirestore(app):null,storage=ok?getStorage(app):null;
+const app=ok?initializeApp(cfg):null,auth=ok?getAuth(app):null,db=ok?getFirestore(app):null;
 let off=[],offMe=()=>{},started=false,me=null,users=[],view='pac';
 
 function gate(h,p,mode){
@@ -530,7 +475,8 @@ function start(u){
 }
 
 $('gin').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(()=>{$('gp').textContent='No se pudo iniciar sesión. Probá de nuevo.'});
-$('gout').onclick=$('out').onclick=()=>signOut(auth);$('adminBtn').onclick=()=>setView(view==='pac'?'usr':'pac');
+$('gout').onclick=$('out').onclick=()=>signOut(auth);
+$('adminBtn').onclick=()=>setView(view==='pac'?'usr':'pac');
 
 if(!ok)gate('Falta configurar Firebase','Pegá los datos de tu proyecto en index.html (ver README.md).','none');
 else onAuthStateChanged(auth,user=>{
