@@ -6,10 +6,10 @@
 <title>Pase de sala</title>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f3f7f8;--card:#fff;--ink:#13262b;--mute:#587076;--line:#d3dfe2;--acc:#0a6b76;--acc-ink:#fff;--tint:#e2f0f2;--warn:#7a4f00;--warn-bg:#fbeecb;--bad:#a1281f;
+:root{--bg:#f3f7f8;--card:#fff;--ink:#13262b;--mute:#587076;--line:#d3dfe2;--acc:#0a6b76;--acc-ink:#fff;--tint:#e2f0f2;--warn:#7a4f00;--warn-bg:#fbeecb;--bad:#a1281f;--border-today:#9ae6b4;--border-past:#fefcbf;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1a1d;--card:#142428;--ink:#e4eff1;--mute:#8fa8ae;--line:#253f45;--acc:#52c2ce;--acc-ink:#04262a;--tint:#183338;--warn:#f0c46a;--warn-bg:#382c10;--bad:#ff9b8f}}
-:root[data-theme="dark"]{--bg:#0d1a1d;--card:#142428;--ink:#e4eff1;--mute:#8fa8ae;--line:#253f45;--acc:#52c2ce;--acc-ink:#04262a;--tint:#183338;--warn:#f0c46a;--warn-bg:#382c10;--bad:#ff9b8f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1a1d;--card:#142428;--ink:#e4eff1;--mute:#8fa8ae;--line:#253f45;--acc:#52c2ce;--acc-ink:#04262a;--tint:#183338;--warn:#f0c46a;--warn-bg:#382c10;--bad:#ff9b8f;--border-today:#2f855a;--border-past:#b7791f}}
+:root[data-theme="dark"]{--bg:#0d1a1d;--card:#142428;--ink:#e4eff1;--mute:#8fa8ae;--line:#253f45;--acc:#52c2ce;--acc-ink:#04262a;--tint:#183338;--warn:#f0c46a;--warn-bg:#382c10;--bad:#ff9b8f;--border-today:#2f855a;--border-past:#b7791f}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
 [hidden]{display:none!important}
@@ -32,10 +32,12 @@ input:disabled,textarea:disabled{opacity:.85;background:var(--bg)}
 .btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
 main{max-width:1100px;margin:0 auto;padding:1rem}
 .note{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:.6rem .8rem;margin-bottom:.8rem;font-size:.9rem}
-/* Modificado: se agrega una columna más para "Pendientes" */
-.grid{display:grid;grid-template-columns:4.2rem minmax(9rem,1.1fr) 7.5rem minmax(0,2fr) minmax(0,2fr) minmax(0,2fr);gap:.25rem 1rem;align-items:start}
+/* Grilla actualizada a 3 columnas para simplificar la vista */
+.grid{display:grid;grid-template-columns:4.2rem minmax(9rem,1fr) 7.5rem;gap:.25rem 1rem;align-items:start}
 .cols{padding:0 calc(1rem + 1px) .4rem;color:var(--mute);font-size:.82rem;font-weight:600}
 .row{display:grid;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;cursor:pointer}
+.row.updated-today{border:2px solid var(--border-today)}
+.row.updated-past{border:2px solid var(--border-past)}
 .row:hover{border-color:var(--acc)}
 .bed{display:grid;place-items:center;min-height:2.6rem;border-radius:8px;background:var(--tint);color:var(--acc);font-weight:700;font-size:1.15rem;overflow:hidden}
 .row.alta .bed{background:var(--warn-bg);color:var(--warn)}
@@ -43,12 +45,14 @@ main{max-width:1100px;margin:0 auto;padding:1rem}
 .sub{font-size:.8rem;color:var(--mute)}
 .tag{display:inline-block;font-size:.75rem;font-weight:600;border-radius:999px;padding:.05rem .55rem;background:var(--warn-bg);color:var(--warn)}
 .clamp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--mute)}
+.mod-time{grid-column:1 / -1;font-size:.75rem;color:var(--mute);text-align:right;margin-top:.3rem;font-style:italic}
+.field-updated{border:2px solid var(--border-today) !important;outline:none}
 .empty{text-align:center;color:var(--mute);padding:3rem 1rem}
 @media (max-width:760px){
 .cols{display:none}
 .grid{grid-template-columns:3.6rem 1fr;gap:.15rem .8rem}
-/* Modificado: abarca 5 filas ahora que hay un dato extra */
-.bed{grid-row:span 5;min-height:3.2rem}
+/* Adaptado para los nuevos contenidos simplificados */
+.bed{grid-row:span 3;min-height:3.2rem}
 .ing::before,.clamp[data-l]::before{content:attr(data-l) ": ";font-weight:600}
 .clamp:empty{display:none}
 }
@@ -85,7 +89,7 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
     <span class="count" id="count" aria-live="polite"></span>
     <button class="btn pri" id="new" type="button" hidden>Nuevo paciente</button>
     <button class="btn" id="adminBtn" type="button" hidden>Usuarios</button>
-    <button class="btn" id="out" type="button">Salir</button>
+    <button class="btn" id="out" type="button" hidden>Salir</button>
     <input class="search" id="q" type="search" placeholder="Buscar por paciente, cama o cualquier dato (incluye altas)" autocomplete="off" aria-label="Buscar pacientes">
   </div>
 </header>
@@ -153,20 +157,32 @@ function render(){
     L.append(p);return;
   }
   const head=document.createElement('div');head.className='cols grid';
-  // SE AGREGÓ "Pendientes" AL ENCABEZADO
-  ['Cama','Paciente','Ingreso','Enfermedad actual','Tratamiento','Pendientes'].forEach(t=>head.append(div('',t)));
+  ['Cama','Paciente','Ingreso'].forEach(t=>head.append(div('',t)));
   L.append(head);
   list.forEach(r=>{
     const alta=r.estado==='alta';
     const b=document.createElement('button');b.type='button';b.className='row grid'+(alta?' alta':'');
+    
+    const isToday = r.modificadoEl && new Date(r.modificadoEl).toDateString() === new Date().toDateString();
+    if (!alta) {
+      if (isToday) b.classList.add('updated-today');
+      else b.classList.add('updated-past');
+    }
+
     const ing=div('ing',fmt(r.ingreso),'Ingreso');
     const sub=div('sub','');
     if(alta){const t=document.createElement('span');t.className='tag';t.textContent='Alta '+fmt(r.fechaAlta);sub.append(t)}
     else{const n=days(r.ingreso);sub.textContent=n?'Día '+n:''}
     ing.append(sub);
-    // SE AGREGÓ EL CLAMP DE PENDIENTES
-    b.append(div('bed',r.cama||'—'),div('name',r.paciente||'Sin nombre'),ing,
-      div('clamp',r.enfermedadActual,'Enfermedad actual'),div('clamp',r.tratamiento,'Tratamiento'),div('clamp',r.pendientes,'Pendientes'));
+    
+    b.append(div('bed',r.cama||'—'),div('name',r.paciente||'Sin nombre'),ing);
+    
+    if (isToday && r.modificadoEl && !alta) {
+      const time = new Date(r.modificadoEl).toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'});
+      const mt = div('mod-time', `Actualizado hoy a las ${time}`);
+      b.append(mt);
+    }
+
     b.onclick=()=>openPanel(r.id);
     L.append(b);
   });
@@ -194,7 +210,19 @@ function build(){
 function openPanel(id){
   const r=id?rows.find(x=>x.id===id):null;
   cur=r||null;orig={};
-  FIELDS.forEach(x=>{const v=r?(r[x.k]||''):(x.k==='ingreso'?today():'');orig[x.k]=v;const e=$('f_'+x.k);e.value=v;e.disabled=!canWrite});
+  FIELDS.forEach(x=>{
+    const v=r?(r[x.k]||''):(x.k==='ingreso'?today():'');
+    orig[x.k]=v;
+    const e=$('f_'+x.k);
+    e.value=v;
+    e.disabled=!canWrite;
+    
+    if (r && r.lastModifiedFields && r.lastModifiedFields.includes(x.k)) {
+      e.classList.add('field-updated');
+    } else {
+      e.classList.remove('field-updated');
+    }
+  });
   const alta=!!r&&r.estado==='alta';
   $('ptitle').textContent=r?(r.paciente||'Sin nombre'):'Nuevo paciente';
   $('pstate').textContent=alta?'Alta el '+fmt(r.fechaAlta):(r?'Internado · día '+days(r.ingreso):'');
@@ -240,14 +268,25 @@ async function save(extra){
 
   try{
     if(!cur){
-      await col.add(Object.assign({},vals,{estado:'activo',fechaAlta:'',creado:now, modificadoPor:author, modificadoEl:now},extra));
+      const newFields = Object.keys(vals).filter(k => vals[k] !== '' && k !== 'ingreso'); 
+      if (vals['ingreso'] !== today()) newFields.push('ingreso');
+      await col.add(Object.assign({},vals,{estado:'activo',fechaAlta:'',creado:now, modificadoPor:author, modificadoEl:now, lastModifiedFields: newFields},extra));
     }
     else{
       const ch=Object.assign({},extra);
-      FIELDS.forEach(x=>{if(vals[x.k]!==orig[x.k].trim())ch[x.k]=vals[x.k]});
+      const changedKeys = [];
+      FIELDS.forEach(x=>{
+        if(vals[x.k]!==orig[x.k].trim()){
+          ch[x.k]=vals[x.k];
+          changedKeys.push(x.k);
+        }
+      });
       if(Object.keys(ch).length){
         ch.modificadoPor = author;
         ch.modificadoEl = now;
+        if (changedKeys.length > 0) {
+          ch.lastModifiedFields = changedKeys;
+        }
         await col.doc(cur.id).update(ch);
       }
     }
