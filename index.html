@@ -90,15 +90,15 @@ input:disabled,textarea:disabled{opacity:.85;background:var(--bg)}
 .btn:hover{border-color:var(--acc)}
 .btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
 
-/* Botón Deslizable de Modo Claro / Oscuro estilo referencia */
+/* Botón Deslizable de Modo Claro / Oscuro compacto */
 .theme-toggle-btn {
   position: relative;
-  width: 128px;
-  height: 42px;
+  width: 64px;
+  height: 24px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: var(--card);
-  padding: 3px;
+  padding: 2px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -107,22 +107,24 @@ input:disabled,textarea:disabled{opacity:.85;background:var(--bg)}
   overflow: hidden;
   transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+  margin-left: 0.25rem;
 }
 .theme-toggle-btn:hover {
   border-color: var(--acc);
 }
 .theme-label {
-  font-size: 8.5px;
+  font-size: 7px;
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2px;
   z-index: 1;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
-.theme-label.light-label { margin-left: 10px; color: var(--mute); text-align: left; }
-.theme-label.dark-label { margin-right: 10px; color: var(--ink); text-align: right; }
+.theme-label.light-label { margin-left: 5px; color: var(--mute); text-align: left; }
+.theme-label.dark-label { margin-right: 5px; color: var(--ink); text-align: right; }
 
 :root[data-theme="dark"] .light-label { opacity: 0.35; }
 :root[data-theme="dark"] .dark-label { opacity: 1; }
@@ -131,22 +133,22 @@ input:disabled,textarea:disabled{opacity:.85;background:var(--bg)}
 
 .theme-thumb {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 36px;
-  height: 36px;
+  top: 1px;
+  left: 1px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: var(--bg);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 11px;
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
   z-index: 2;
 }
 :root[data-theme="dark"] .theme-thumb {
-  transform: translateX(85px);
+  transform: translateX(40px);
   background: #1e2e33;
 }
 :root[data-theme="light"] .theme-thumb {
@@ -257,18 +259,18 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
         <div>Hospital Cetrángolo</div>
         <div>Pase de Cirugía</div>
       </div>
+
+      <!-- Botón deslizable Modo Claro / Dark Mode compacto al lado del título -->
+      <button class="theme-toggle-btn" id="themeBtn" type="button" aria-label="Cambiar tema">
+        <span class="theme-label light-label">LIGHT</span>
+        <span class="theme-label dark-label">DARK</span>
+        <div class="theme-thumb">
+          <span class="icon-sun">☀</span>
+          <span class="icon-moon">🌙</span>
+        </div>
+      </button>
     </div>
     <span class="count" id="count" aria-live="polite"></span>
-
-    <!-- Botón deslizable Modo Claro / Dark Mode -->
-    <button class="theme-toggle-btn" id="themeBtn" type="button" aria-label="Cambiar tema">
-      <span class="theme-label light-label">LIGHT<br>MODE</span>
-      <span class="theme-label dark-label">DARK<br>MODE</span>
-      <div class="theme-thumb">
-        <span class="icon-sun">☀️️</span>
-        <span class="icon-moon">🌙</span>
-      </div>
-    </button>
 
     <button class="btn pri" id="new" type="button" hidden>Nuevo paciente</button>
     <button class="btn" id="adminBtn" type="button" hidden>Usuarios</button>
@@ -509,7 +511,7 @@ function render(){
       pendBox.className = 'pend-box';
       const pendTag = document.createElement('span');
       pendTag.className = 'pend-tag';
-      pendTag.innerHTML = `<strong>Pendiente:</strong> ${escapeHtml(r.pendientes.trim())}`;
+      pendTag.innerHTML = `<strong>Pend.:</strong> ${escapeHtml(r.pendientes.trim())}`;
       pendBox.append(pendTag);
       nameEl.append(pendBox);
     }
