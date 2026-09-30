@@ -509,7 +509,7 @@ function render(){
       pendBox.className = 'pend-box';
       const pendTag = document.createElement('span');
       pendTag.className = 'pend-tag';
-      pendTag.innerHTML = `⚠️ <strong>Pendiente:</strong> ${escapeHtml(r.pendientes.trim())}`;
+      pendTag.innerHTML = `<strong>Pendiente:</strong> ${escapeHtml(r.pendientes.trim())}`;
       pendBox.append(pendTag);
       nameEl.append(pendBox);
     }
