@@ -77,6 +77,904 @@ button,input,textarea{font:inherit;color:inherit}
 
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:.85rem 1rem}
 .bar{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center}
+.brand{display:flex;align-items:center;justify-content:space-between;width:100%;gap:.75rem}
+.brand-left{display:flex;align-items:center;gap:.75rem;min-width:0}
+.logo{height:2.8rem;width:auto;max-width:100px;object-fit:contain;border-radius:4px;flex-shrink:0}
+.brand-title{display:flex;flex-direction:column;justify-content:center;line-height:1.15;min-width:0}
+.brand-title div{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
+.count{color:var(--mute);font-size:.9rem;flex:1 1 auto}
+.search{flex:1 1 100%;min-width:0}
+input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem}
+textarea{min-height:4.6rem;resize:none;overflow:hidden}
+input:disabled,textarea:disabled{opacity:.85;background:var(--bg)}
+.btn{font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--card);padding:.55rem .95rem;cursor:pointer}
+.btn:hover{border-color:var(--acc)}
+.btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+
+/* Botón Deslizable de Modo Claro / Oscuro compacto */
+.theme-toggle-btn {
+  position: relative;
+  width: 70px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  padding: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  overflow: hidden;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.theme-toggle-btn:hover {
+  border-color: var(--acc);
+}
+.theme-label {
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  width: 32px;
+  text-align: center;
+}
+.theme-label.light-label { color: var(--mute); }
+.theme-label.dark-label { color: var(--mute); }
+
+:root[data-theme="dark"] .light-label { opacity: 0.4; }
+:root[data-theme="dark"] .dark-label { opacity: 1; color: var(--ink); }
+:root[data-theme="light"] .light-label { opacity: 1; color: var(--ink); }
+:root[data-theme="light"] .dark-label { opacity: 0.4; }
+
+.theme-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+  z-index: 2;
+}
+:root[data-theme="dark"] .theme-thumb {
+  transform: translateX(42px);
+  background: #1e2e33;
+}
+:root[data-theme="light"] .theme-thumb {
+  transform: translateX(0);
+  background: #ffffff;
+}
+.theme-thumb .icon-sun { display: inline; color: #f59e0b; }
+.theme-thumb .icon-moon { display: none; color: #38bdf8; }
+:root[data-theme="dark"] .theme-thumb .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-thumb .icon-moon { display: inline; }
+
+main{max-width:1100px;margin:0 auto;padding:1rem}
+.note{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:.6rem .8rem;margin-bottom:.8rem;font-size:.9rem}
+.grid{display:grid;grid-template-columns:4.2rem 1fr;gap:.25rem 1rem;align-items:start}
+.cols{padding:0 calc(1rem + 1px) .4rem;color:var(--mute);font-size:.82rem;font-weight:600}
+.row{display:grid;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;cursor:pointer;position:relative}
+.row.updated-today{border:2px solid var(--border-today)}
+.row.updated-past{border:2px solid var(--border-past)}
+.row:hover{border-color:var(--acc)}
+.bed{display:grid;place-items:center;min-height:2.6rem;border-radius:8px;background:var(--tint);color:var(--acc);font-weight:700;font-size:1.15rem;overflow:hidden}
+.row.alta .bed{background:var(--warn-bg);color:var(--warn)}
+.name{font-weight:600}
+.sub{font-size:.8rem;color:var(--mute)}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;border-radius:999px;padding:.05rem .55rem;background:var(--warn-bg);color:var(--warn)}
+.tag.media{background:var(--tint);color:var(--acc);margin-left:.4rem}
+
+/* Estilo para información de Pendientes compacta en la tarjeta */
+.pend-box {
+  margin-top: .45rem;
+  width: 100%;
+}
+.pend-tag {
+  display: block;
+  font-size: .82rem;
+  line-height: 1.35;
+  padding: .35rem .6rem;
+  border-radius: 6px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  border: 1px solid rgba(240, 196, 106, 0.35);
+  max-width: 100%;
+  word-break: break-word;
+}
+.pend-tag strong {
+  font-weight: 700;
+  white-space: nowrap;
+  margin-right: .25rem;
+}
+
+.mod-time{grid-column:1 / -1;font-size:.75rem;color:var(--mute);text-align:right;margin-top:.3rem;font-style:italic}
+.field-updated{border:2px solid var(--border-today) !important;outline:none}
+.empty{text-align:center;color:var(--mute);padding:3rem 1rem}
+
+@media (max-width:760px){
+  .cols{display:none}
+  .grid{grid-template-columns:3.6rem 1fr;gap:.15rem .8rem}
+  .bed{grid-row:span 2;min-height:3.2rem}
+}
+
+#scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:9}
+#panel{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);z-index:10;display:flex;flex-direction:column;background:var(--card);border-left:1px solid var(--line)}
+.ph{padding:calc(.9rem + env(safe-area-inset-top,0px)) 1rem .8rem;border-bottom:1px solid var(--line)}
+.ph h2{margin:0;font-size:1.15rem}
+.pb{flex:1;overflow:auto;padding:1rem;display:grid;gap:.85rem;align-content:start}
+.fgrid1{display:grid;grid-template-columns:5.5rem 1fr 8.5rem;gap:.75rem;margin-bottom:.75rem}
+.fgrid2{display:grid;grid-template-columns:1fr 6rem 1fr;gap:.75rem}
+label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
+.pf{border-top:1px solid var(--line);padding:.8rem 1rem calc(.8rem + env(safe-area-inset-bottom,0px));display:grid;gap:.6rem}
+.acts,.altabox{display:flex;flex-wrap:wrap;gap:.5rem;align-items:end}
+.altabox input{width:10rem}
+#msg{margin:0;font-size:.88rem;color:var(--mute)}
+#msg.err{color:var(--bad)}
+
+@media (max-width:520px){
+  .fgrid1{grid-template-columns:4.5rem 1fr}
+  .fgrid1 .field-dni{grid-column:1/-1}
+  .fgrid2{grid-template-columns:1fr 1fr}
+  .fgrid2 .field-ingreso{grid-column:1/-1}
+}
+
+#gate{min-height:70vh;display:grid;place-content:center;justify-items:center;text-align:center;gap:.8rem;padding:2rem;max-width:30rem;margin:0 auto}
+#gate p{margin:0;color:var(--mute)}
+.urow{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.7rem 1rem;margin-bottom:.5rem}
+.tag.ok{background:var(--tint);color:var(--acc)}
+
+.adjunto-box{border:1px solid var(--line);border-radius:8px;padding:.85rem;background:var(--card);margin-top:.25rem}
+.adjunto-preview{margin-top:.4rem;min-height:90px;max-height:260px;overflow:hidden;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--bg);border:1px dashed var(--line);padding:.5rem;text-align:center}
+.adjunto-preview img, .adjunto-preview video{max-width:100%;max-height:240px;object-fit:contain;border-radius:6px;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- Fondo decorativo difuminado en verde y amarillo -->
+<div class="bg-decorations" aria-hidden="true">
+  <div class="blur-line yellow-1"></div>
+  <div class="blur-line green-1"></div>
+  <div class="blur-line yellow-2"></div>
+  <div class="blur-line green-2"></div>
+</div>
+
+<section id="gate"><h1 id="gh">Pase de sala</h1><p id="gp">Cargando…</p><button class="btn pri" id="gin" type="button" hidden>Ingresar con Google</button><button class="btn" id="gout" type="button" hidden>Salir</button></section>
+<header class="top" id="top" hidden>
+  <div class="bar">
+    <div class="brand">
+      <div class="brand-left">
+        <img src="Logo.jpg" alt="Logo Hospital Cetrángolo" class="logo" onerror="this.style.display='none'">
+        <div class="brand-title">
+          <div>Hospital Cetrángolo</div>
+          <div>Pase de Cirugía</div>
+        </div>
+      </div>
+
+      <!-- Botón deslizable Modo Claro / Dark Mode en el margen derecho -->
+      <button class="theme-toggle-btn" id="themeBtn" type="button" aria-label="Cambiar tema">
+        <span class="theme-label light-label">LIGHT</span>
+        <span class="theme-label dark-label">DARK</span>
+        <div class="theme-thumb">
+          <span class="icon-sun">☀</span>
+          <span class="icon-moon">🌙</span>
+        </div>
+      </button>
+    </div>
+    <span class="count" id="count" aria-live="polite"></span>
+
+    <button class="btn pri" id="new" type="button" hidden>Nuevo paciente</button>
+    <button class="btn" id="adminBtn" type="button" hidden>Usuarios</button>
+    <button class="btn" id="out" type="button" hidden>Salir</button>
+    <input class="search" id="q" type="search" placeholder="Buscar por paciente, cama o cualquier dato (incluye altas)" autocomplete="off" aria-label="Buscar pacientes">
+  </div>
+</header>
+<main id="main" hidden>
+  <div class="note" id="ro" hidden>Modo lectura: podés ver y buscar pacientes, pero no editarlos.</div>
+  <div id="list"><p class="empty">Cargando pacientes…</p></div>
+  <div id="users" hidden></div>
+</main>
+<div id="scrim" hidden></div>
+<aside id="panel" hidden aria-label="Ficha del paciente">
+  <div class="ph"><h2 id="ptitle"></h2><div class="sub" id="pstate"></div></div>
+  <div class="pb">
+    <div class="f3" id="f3"></div>
+    <div id="fbig" style="display:grid;gap:.85rem"></div>
+    
+    <!-- Bloque de Archivo Adjunto -->
+    <div class="adjunto-box" id="adjuntoBox">
+      <label>Adjunto (Foto / Video comprimido)</label>
+      <div id="adjuntoPreview" class="adjunto-preview"><span class="sub">Sin archivo adjunto</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.6rem;">
+        <input type="file" id="adjuntoInput" accept="image/*,video/*" style="display:none">
+        <button class="btn" type="button" id="adjuntoBtn">📁 Seleccionar Foto/Video</button>
+        <button class="btn" type="button" id="adjuntoDelBtn" style="color:var(--bad);border-color:var(--bad)" hidden>Eliminar adjunto</button>
+      </div>
+      <div id="adjuntoStatus" class="sub" style="margin-top:.35rem;font-size:.8rem;"></div>
+    </div>
+  </div>
+
+  <div class="pf">
+    <div id="lastMod" class="sub" style="text-align: right; margin-bottom: 0.2rem; font-style: italic;"></div>
+    <div class="altabox" id="altaBox" hidden>
+      <div><label for="altaDate">Fecha de alta</label><input type="date" id="altaDate"></div>
+      <button class="btn pri" id="altaOk" type="button">Confirmar alta</button>
+      <button class="btn" id="altaNo" type="button">Cancelar</button>
+    </div>
+    <div class="acts">
+      <button class="btn pri" id="save" type="button">Guardar</button>
+      <button class="btn" id="altaBtn" type="button">Dar de alta</button>
+      <button class="btn" id="reBtn" type="button">Reingresar</button>
+      <button class="btn" id="close" type="button">Cerrar</button>
+    </div>
+    <p id="msg" role="status"></p>
+  </div>
+</aside>
+
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {getFirestore,collection,doc,addDoc,setDoc,updateDoc,onSnapshot} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import {getStorage,ref as sRef,uploadBytes,getDownloadURL,deleteObject} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js';
+
+const cfg={
+  apiKey:"AIzaSyAbLNnPOZTcp8WpKmiWnRqruOdmrLtyIkE",
+  authDomain:"pase-cirugia-cetra.firebaseapp.com",
+  projectId:"pase-cirugia-cetra",
+  storageBucket:"pase-cirugia-cetra.firebasestorage.app",
+  appId:"1:430963773694:web:3c753dfcdec353cfb495af"
+};
+const FIELDS=[
+ {k:'cama',l:'Cama',t:'text'},{k:'paciente',l:'Paciente',t:'text'},{k:'dni',l:'DNI',t:'text'},
+ {k:'nacimiento',l:'F. Nacimiento',t:'date'},{k:'ingreso',l:'Ingreso',t:'date'},
+ {k:'antecedentes',l:'Antecedentes'},{k:'enfermedadActual',l:'Antecedentes enfermedad actual'},
+ {k:'cirugia',l:'Cirugía'},{k:'estudios',l:'Estudios'},{k:'cultivos',l:'Cultivos'},{k:'tratamiento',l:'Tratamiento'},
+ {k:'pendientes',l:'Pendientes'}
+];
+const $=id=>document.getElementById(id);
+let col=null,canWrite=true,rows=[],loaded=false,q='',cur=null,orig={},busy=false;
+let selectedFile=null, removePendingAttachment=false;
+
+const norm=s=>(s==null?'':String(s)).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const fmt=s=>s?String(s).split('-').reverse().join('/'):'';
+const days=s=>{if(!s)return 0;const n=Math.round((new Date(today()+'T00:00:00')-new Date(s+'T00:00:00'))/864e5)+1;return n>0?n:0};
+const escapeHtml = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+async function compressImage(file, maxDimension = 1280, quality = 0.72) {
+  if (!file || !file.type.startsWith('image/')) return file;
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.src = url;
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let width = img.width;
+      let height = img.height;
+      if (width > maxDimension || height > maxDimension) {
+        if (width > height) {
+          height = Math.round((height * maxDimension) / width);
+          width = maxDimension;
+        } else {
+          width = Math.round((width * maxDimension) / height);
+          height = maxDimension;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            const compressed = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            });
+            resolve(compressed);
+          } else {
+            resolve(file);
+          }
+        },
+        'image/jpeg',
+        quality
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(file);
+    };
+  });
+}
+
+function calcAge(dobStr){
+  if(!dobStr)return '';
+  const dob=new Date(dobStr+'T00:00:00');
+  if(isNaN(dob.getTime()))return '';
+  const t=new Date();
+  let age=t.getFullYear()-dob.getFullYear();
+  const m=t.getMonth()-dob.getMonth();
+  if(m<0||(m===0&&t.getDate()<dob.getDate()))age--;
+  return age>=0?age+' años':'';
+}
+
+function updateAgeDisplay(){
+  const dob=$('f_nacimiento')?.value;
+  const ageEl=$('f_edad');
+  if(ageEl)ageEl.value=calcAge(dob);
+}
+
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')||'dark';
+  const next=cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  localStorage.setItem('theme',next);
+}
+
+function div(cls,txt,label){const d=document.createElement('div');d.className=cls;d.textContent=txt||'';if(label)d.dataset.l=label;return d}
+function msg(t,err){const m=$('msg');m.textContent=t||'';m.className=err?'err':''}
+
+function renderAdjuntoPreview(url, mimeType) {
+  const container = $('adjuntoPreview');
+  container.innerHTML = '';
+  if (!url) {
+    container.innerHTML = '<span class="sub">Sin archivo adjunto</span>';
+    $('adjuntoDelBtn').hidden = true;
+    return;
+  }
+  $('adjuntoDelBtn').hidden = !canWrite;
+  if (mimeType && mimeType.startsWith('video/')) {
+    const vid = document.createElement('video');
+    vid.src = url;
+    vid.controls = true;
+    container.appendChild(vid);
+  } else {
+    const img = document.createElement('img');
+    img.src = url;
+    img.title = 'Hacé clic para abrir en tamaño completo';
+    img.onclick = () => window.open(url, '_blank');
+    container.appendChild(img);
+  }
+}
+
+function render(){
+  const L=$('list');L.textContent='';
+  if(!loaded)return;
+  const nq=norm(q.trim());
+  const act=rows.filter(r=>r.estado!=='alta');
+  const list=(nq?rows.filter(r=>FIELDS.some(f=>norm(r[f.k]).includes(nq))):act).sort((a,b)=>{
+    const x=a.estado==='alta',y=b.estado==='alta';
+    if(x!==y)return x?1:-1;
+    if(x)return (b.fechaAlta||'').localeCompare(a.fechaAlta||'');
+    return (a.cama||'').localeCompare(b.cama||'',undefined,{numeric:true});
+  });
+  $('count').textContent=nq?list.length+(list.length===1?' resultado':' resultados')+' entre activos y altas':act.length+(act.length===1?' paciente internado':' pacientes internados');
+  if(!list.length){
+    const p=document.createElement('p');p.className='empty';
+    p.textContent=nq?'Sin resultados para «'+q.trim()+'».':(canWrite?'No hay pacientes internados. Cargá el primero con «Nuevo paciente».':'No hay pacientes internados.');
+    L.append(p);return;
+  }
+  const head=document.createElement('div');head.className='cols grid';
+  ['Cama','Paciente'].forEach(t=>head.append(div('',t)));
+  L.append(head);
+
+  list.forEach(r=>{
+    const alta=r.estado==='alta';
+    const b=document.createElement('button');b.type='button';b.className='row grid'+(alta?' alta':'');
+    
+    const isToday = r.modificadoEl && new Date(r.modificadoEl).toDateString() === new Date().toDateString();
+    if (!alta) {
+      if (isToday) b.classList.add('updated-today');
+      else b.classList.add('updated-past');
+    }
+
+    const nameEl=div('name',r.paciente||'Sin nombre');
+
+    // 1. Mostrar únicamente ícono de clip y texto "Adjunto" si posee archivo
+    if (r.adjuntoUrl) {
+      const tagAdj = document.createElement('span');
+      tagAdj.className = 'tag media';
+      tagAdj.innerHTML = '📎 Adjunto';
+      nameEl.append(tagAdj);
+    }
+
+    if(alta){
+      const t=document.createElement('span');
+      t.className='tag';
+      t.style.marginLeft = '0.4rem';
+      t.textContent='Alta '+fmt(r.fechaAlta);
+      nameEl.append(t);
+    }
+
+    const ageStr=calcAge(r.nacimiento);
+    const subInfo=[];
+    if(r.dni)subInfo.push('DNI '+r.dni);
+    if(ageStr)subInfo.push(ageStr);
+    if(subInfo.length){
+      const pSub=div('sub',subInfo.join(' · '));
+      nameEl.append(pSub);
+    }
+
+    // 2. Información de Pendientes mostrada en el recuadro principal de forma estética y compacta
+    if (r.pendientes && r.pendientes.trim()) {
+      const pendBox = document.createElement('div');
+      pendBox.className = 'pend-box';
+      const pendTag = document.createElement('div');
+      pendTag.className = 'pend-tag';
+      pendTag.innerHTML = `⚠️ <strong>Pendiente:</strong> ${escapeHtml(r.pendientes.trim())}`;
+      pendBox.append(pendTag);
+      nameEl.append(pendBox);
+    }
+    
+    b.append(div('bed',r.cama||'—'),nameEl);
+    
+    if (isToday && r.modificadoEl && !alta) {
+      const time = new Date(r.modificadoEl).toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'});
+      const mt = div('mod-time', `Actualizado hoy a las ${time}`);
+      b.append(mt);
+    }
+
+    b.onclick=()=>openPanel(r.id);
+    L.append(b);
+  });
+}
+
+function createField(k, labelText, type, maxLen) {
+  const w = document.createElement('div');
+  const l = document.createElement('label');
+  l.htmlFor = 'f_' + k;
+  l.textContent = labelText;
+  const inp = document.createElement(type ? 'input' : 'textarea');
+  inp.id = 'f_' + k;
+  if (type) {
+    inp.type = type;
+    inp.autocomplete = 'off';
+  } else {
+    inp.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+    });
+  }
+  if (maxLen) inp.maxLength = maxLen;
+  w.append(l, inp);
+  return w;
+}
+
+function build(){
+  const f3 = $('f3');
+  f3.innerHTML = '';
+  
+  const r1 = document.createElement('div');
+  r1.className = 'fgrid1';
+  r1.append(createField('cama', 'Cama', 'text', 12));
+  r1.append(createField('paciente', 'Paciente', 'text', 120));
+  const dniField = createField('dni', 'DNI', 'text', 20);
+  dniField.classList.add('field-dni');
+  r1.append(dniField);
+  
+  const r2 = document.createElement('div');
+  r2.className = 'fgrid2';
+  const nacField = createField('nacimiento', 'F. Nacimiento', 'date');
+  r2.append(nacField);
+  
+  const edadW = document.createElement('div');
+  const edadL = document.createElement('label');
+  edadL.htmlFor = 'f_edad';
+  edadL.textContent = 'Edad';
+  const edadInp = document.createElement('input');
+  edadInp.id = 'f_edad';
+  edadInp.type = 'text';
+  edadInp.readOnly = true;
+  edadInp.placeholder = 'Años';
+  edadInp.style.background = 'var(--bg)';
+  edadInp.style.fontWeight = '600';
+  edadW.append(edadL, edadInp);
+  r2.append(edadW);
+  
+  const ingField = createField('ingreso', 'Ingreso', 'date');
+  ingField.classList.add('field-ingreso');
+  r2.append(ingField);
+  
+  f3.append(r1, r2);
+
+  const nacInp = $('f_nacimiento');
+  if (nacInp) {
+    nacInp.addEventListener('input', updateAgeDisplay);
+    nacInp.addEventListener('change', updateAgeDisplay);
+  }
+
+  const fbig = $('fbig');
+  fbig.innerHTML = '';
+  FIELDS.slice(5).forEach(x => {
+    fbig.append(createField(x.k, x.l, x.t));
+  });
+
+  $('adjuntoBtn').onclick = () => $('adjuntoInput').click();
+  $('adjuntoInput').onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 50 * 1024 * 1024) {
+      msg('El archivo es demasiado grande (máximo 50MB).', 1);
+      e.target.value = '';
+      return;
+    }
+    $('adjuntoStatus').textContent = 'Procesando archivo...';
+    let fileToUpload = file;
+    if (file.type.startsWith('image/')) {
+      fileToUpload = await compressImage(file);
+      $('adjuntoStatus').textContent = `Foto comprimida: ${(fileToUpload.size / 1024).toFixed(0)} KB (lista para guardar)`;
+    } else {
+      $('adjuntoStatus').textContent = `Video listo: ${(file.size / (1024 * 1024)).toFixed(1)} MB (listo para guardar)`;
+    }
+    selectedFile = fileToUpload;
+    removePendingAttachment = false;
+    renderAdjuntoPreview(URL.createObjectURL(fileToUpload), fileToUpload.type);
+  };
+
+  $('adjuntoDelBtn').onclick = () => {
+    selectedFile = null;
+    removePendingAttachment = true;
+    $('adjuntoInput').value = '';
+    $('adjuntoStatus').textContent = 'Adjunto marcado para borrar al guardar.';
+    renderAdjuntoPreview(null);
+  };
+}
+
+function openPanel(id){
+  const r=id?rows.find(x=>x.id===id):null;
+  cur=r||null;orig={};
+  selectedFile = null;
+  removePendingAttachment = false;
+  $('adjuntoInput').value = '';
+  $('adjuntoStatus').textContent = '';
+
+  FIELDS.forEach(x=>{
+    const v=r?(r[x.k]||''):(x.k==='ingreso'?today():'');
+    orig[x.k]=v;
+    const e=$('f_'+x.k);
+    if(e){
+      e.value=v;
+      e.disabled=!canWrite;
+      if (r && r.lastModifiedFields && r.lastModifiedFields.includes(x.k)) {
+        e.classList.add('field-updated');
+      } else {
+        e.classList.remove('field-updated');
+      }
+    }
+  });
+
+  if (r && r.adjuntoUrl) {
+    renderAdjuntoPreview(r.adjuntoUrl, r.adjuntoTipo || 'image/jpeg');
+  } else {
+    renderAdjuntoPreview(null);
+  }
+
+  updateAgeDisplay();
+  const alta=!!r&&r.estado==='alta';
+  $('ptitle').textContent=r?(r.paciente||'Sin nombre'):'Nuevo paciente';
+  $('pstate').textContent=alta?'Alta el '+fmt(r.fechaAlta):(r?'Internado · día '+days(r.ingreso):'');
+  $('save').hidden=!canWrite;
+  $('altaBtn').hidden=!canWrite||!r||alta;
+  $('reBtn').hidden=!canWrite||!alta;
+  $('adjuntoBtn').hidden=!canWrite;
+  $('altaBox').hidden=true;$('altaDate').value=today();msg('');
+  
+  if(r && r.modificadoPor){
+    const d = new Date(r.modificadoEl);
+    const time = d.toLocaleTimeString('es-AR', {hour: '2-digit', minute:'2-digit'});
+    $('lastMod').textContent = `Última act. por ${r.modificadoPor} el ${fmt(today() === r.modificadoEl ? '' : d.toISOString().split('T')[0])} a las ${time}`;
+  } else {
+    $('lastMod').textContent = '';
+  }
+
+  $('scrim').hidden=false;$('panel').hidden=false;
+  
+  requestAnimationFrame(() => {
+    FIELDS.forEach(x => {
+      if (!x.t) {
+        const el = $('f_' + x.k);
+        if(el){
+          el.style.height = 'auto';
+          if (el.value) el.style.height = el.scrollHeight + 'px';
+        }
+      }
+    });
+  });
+
+  if(!r&&canWrite)$('f_cama').focus();
+}
+
+function closePanel(){$('panel').hidden=true;$('scrim').hidden=true;cur=null}
+
+async function save(extra){
+  if(!col||busy||!canWrite)return;
+  const vals={};FIELDS.forEach(x=>vals[x.k]=$('f_'+x.k).value.trim());
+  if(!cur&&!vals.cama&&!vals.paciente){msg('Completá al menos la cama o el paciente.',1);return}
+  busy=true;msg('Guardando…');
+  
+  const now = Date.now();
+  const author = me.nombre || me.email.split('@')[0];
+  const isAlta = extra.estado === 'alta';
+
+  try{
+    if ((isAlta || removePendingAttachment) && cur && cur.adjuntoPath && storage) {
+      try {
+        await deleteObject(sRef(storage, cur.adjuntoPath));
+      } catch(e) {
+        console.warn("No se pudo eliminar de Storage:", e);
+      }
+      extra.adjuntoUrl = '';
+      extra.adjuntoPath = '';
+      extra.adjuntoTipo = '';
+    }
+
+    if(!cur){
+      const newFields = Object.keys(vals).filter(k => vals[k] !== '' && k !== 'ingreso'); 
+      if (vals['ingreso'] !== today()) newFields.push('ingreso');
+
+      const docData = Object.assign({},vals,{
+        estado:'activo',
+        fechaAlta:'',
+        creado:now, 
+        modificadoPor:author, 
+        modificadoEl:now, 
+        lastModifiedFields: newFields
+      },extra);
+
+      const docRef = await col.add(docData);
+
+      if (selectedFile && docRef.id && !isAlta && storage) {
+        msg('Subiendo adjunto...');
+        const fileExt = selectedFile.name.split('.').pop() || 'jpg';
+        const filePath = `pacientes/${docRef.id}/${Date.now()}.${fileExt}`;
+        const fileRef = sRef(storage, filePath);
+        await uploadBytes(fileRef, selectedFile);
+        const downloadUrl = await getDownloadURL(fileRef);
+        await docRef.update({
+          adjuntoUrl: downloadUrl,
+          adjuntoPath: filePath,
+          adjuntoTipo: selectedFile.type
+        });
+      }
+    }
+    else{
+      const ch=Object.assign({},extra);
+      const changedKeys = [];
+      FIELDS.forEach(x=>{
+        if(vals[x.k]!==orig[x.k].trim()){
+          ch[x.k]=vals[x.k];
+          changedKeys.push(x.k);
+        }
+      });
+
+      if (selectedFile && !isAlta && storage) {
+        msg('Subiendo adjunto...');
+        if (cur.adjuntoPath) {
+          try { await deleteObject(sRef(storage, cur.adjuntoPath)); } catch(e){}
+        }
+        const fileExt = selectedFile.name.split('.').pop() || 'jpg';
+        const filePath = `pacientes/${cur.id}/${Date.now()}.${fileExt}`;
+        const fileRef = sRef(storage, filePath);
+        await uploadBytes(fileRef, selectedFile);
+        const downloadUrl = await getDownloadURL(fileRef);
+        ch.adjuntoUrl = downloadUrl;
+        ch.adjuntoPath = filePath;
+        ch.adjuntoTipo = selectedFile.type;
+        changedKeys.push('adjunto');
+      }
+
+      if(Object.keys(ch).length){
+        ch.modificadoPor = author;
+        ch.modificadoEl = now;
+        if (changedKeys.length > 0) {
+          ch.lastModifiedFields = changedKeys;
+        }
+        await col.doc(cur.id).update(ch);
+      }
+    }
+    closePanel();
+  }catch(e){
+    console.error(e);
+    const c=e&&e.code;
+    msg(c==='permission-denied'?'No tenés permiso para modificar datos.':'No se pudo guardar. Probá de nuevo.',1);
+  }finally{busy=false}
+}
+
+build();
+$('themeBtn').onclick=toggleTheme;
+$('q').addEventListener('input',e=>{q=e.target.value;render()});
+$('new').onclick=()=>openPanel(null);
+$('close').onclick=closePanel;$('scrim').onclick=closePanel;
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('panel').hidden)closePanel()});
+$('save').onclick=()=>save({});
+$('altaBtn').onclick=()=>{$('altaBox').hidden=false;$('altaDate').focus()};
+$('altaNo').onclick=()=>{$('altaBox').hidden=true};
+$('altaOk').onclick=()=>save({estado:'alta',fechaAlta:$('altaDate').value||today()});
+$('reBtn').onclick=()=>save({estado:'activo',fechaAlta:''});
+
+const ok=!cfg.apiKey.startsWith('PEGAR');
+const app=ok?initializeApp(cfg):null,
+      auth=ok?getAuth(app):null,
+      db=ok?getFirestore(app):null,
+      storage=ok?getStorage(app):null;
+
+let off=[],offMe=()=>{},started=false,me=null,users=[],view='pac';
+
+function gate(h,p,mode){
+  closePanel();$('top').hidden=true;$('main').hidden=true;$('gate').hidden=false;
+  $('gh').textContent=h;$('gp').textContent=p;
+  $('gin').hidden=mode!=='in';$('gout').hidden=mode!=='out';
+}
+function stop(){off.forEach(f=>f());off=[];started=false;rows=[];loaded=false;users=[];col=null}
+function updateAdminBtn(){
+  const n=users.filter(x=>x.estado==='pendiente').length;
+  $('adminBtn').textContent=view==='pac'?'Usuarios'+(n?' ('+n+' pendientes)':''):'Pacientes';
+}
+function setView(v){
+  view=v;$('list').hidden=v!=='pac';$('users').hidden=v!=='usr';
+  $('q').hidden=v!=='pac';$('new').hidden=v!=='pac';
+  updateAdminBtn();
+  if(v==='usr'){$('count').textContent='Gestión de accesos';renderUsers()}else render();
+}
+
+function renderUsers(){
+  updateAdminBtn();
+  if(view!=='usr')return;
+  const U=$('users');U.textContent='';
+  const ord={pendiente:0,aprobado:1};
+  [...users].sort((a,b)=>(ord[a.estado]??2)-(ord[b.estado]??2)||(a.email||'').localeCompare(b.email||'')).forEach(u=>{
+    const r=div('urow','');
+    const info=div('','');info.append(div('name',u.nombre||u.email),div('sub',u.nombre?u.email:''));
+    const t=document.createElement('span');
+    t.className='tag'+(u.estado==='aprobado'?' ok':'');
+    t.textContent=u.estado==='aprobado'?(u.rol==='admin'?'Administrador':'Con acceso'):(u.estado==='pendiente'?'Pendiente':'Sin acceso');
+    const acts=div('acts','');
+    const set=(txt,patch,pri)=>{const b=document.createElement('button');b.type='button';b.className='btn'+(pri?' pri':'');b.textContent=txt;
+      b.onclick=()=>updateDoc(doc(db,'usuarios',u.id),patch).catch(()=>msg('No se pudo actualizar usuario.',1));acts.append(b)};
+    if(u.estado!=='aprobado')set('Dar acceso',{estado:'aprobado'},1);
+    else if(u.id!==me.email){
+      set(u.rol==='admin'?'Quitar administrador':'Hacer administrador',{rol:u.rol==='admin'?'usuario':'admin'});
+      set('Quitar acceso',{estado:'revocado'});
+    }
+    if(u.estado==='pendiente')set('Rechazar',{estado:'revocado'});
+    r.append(info,t,acts);U.append(r);
+  });
+}
+
+function start(u){
+  if(started)return;started=true;me=u;
+  $('gate').hidden=true;$('top').hidden=false;$('main').hidden=false;
+  $('adminBtn').hidden=u.rol!=='admin';
+  col={
+    add:d=>addDoc(collection(db,'pacientes'),d),
+    doc:id=>({update:d=>updateDoc(doc(db,'pacientes',id),d)})
+  };
+  off.push(onSnapshot(collection(db,'pacientes'),s=>{rows=s.docs.map(d=>Object.assign({id:d.id},d.data()));loaded=true;render()},
+    ()=>{$('list').textContent='No se pudieron cargar los pacientes.'}));
+  if(u.rol==='admin')off.push(onSnapshot(collection(db,'usuarios'),s=>{users=s.docs.map(d=>Object.assign({id:d.id},d.data()));renderUsers()},()=>{}));
+  setView('pac');
+}
+
+$('gin').onclick=()=>signInWithPopup(auth,new GoogleAuthProvider()).catch(()=>{$('gp').textContent='No se pudo iniciar sesión. Probá de nuevo.'});
+$('gout').onclick=$('out').onclick=()=>signOut(auth);
+$('adminBtn').onclick=()=>setView(view==='pac'?'usr':'pac');
+
+if(!ok)gate('Falta configurar Firebase','Pegá los datos de tu proyecto en index.html.','none');
+else onAuthStateChanged(auth,user=>{
+  offMe();stop();
+  if(!user){gate('Pase de sala','Ingresá con tu cuenta de Gmail para continuar.','in');return}
+  const email=user.email.toLowerCase(),ref=doc(db,'usuarios',email);
+  gate('Verificando acceso…','','none');
+  offMe=onSnapshot(ref,s=>{
+    if(!s.exists()){
+      if(s.metadata.fromCache)return;
+      setDoc(ref,{email,nombre:user.displayName||'',estado:'pendiente',rol:'usuario',creado:Date.now()})
+        .catch(()=>gate('No se pudo enviar tu solicitud','Probá de nuevo más tarde.','out'));
+      return;
+    }
+    const u=s.data();
+    if(u.estado==='aprobado'){if(started&&me.rol===u.rol)return;stop();start(u)}
+    else{stop();
+      if(u.estado==='pendiente')gate('Solicitud enviada','Un administrador tiene que darte acceso. Esta pantalla se actualiza sola cuando lo haga.','out');
+      else gate('Sin acceso','Tu cuenta ('+email+') no tiene acceso. Consultá con el administrador.','out');
+    }
+  },()=>gate('Error de conexión','No se pudo verificar tu acceso.','out'));
+});
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pase de sala</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script>
+  (function(){
+    const t = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<style>
+:root{
+  --bg:#0d1a1d;
+  --card:#142428;
+  --ink:#e4eff1;
+  --mute:#8fa8ae;
+  --line:#253f45;
+  --acc:#52c2ce;
+  --acc-ink:#04262a;
+  --tint:#183338;
+  --warn:#f0c46a;
+  --warn-bg:#382c10;
+  --bad:#ff9b8f;
+  --border-today:#2f855a;
+  --border-past:#b7791f;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+
+:root[data-theme="light"]{
+  --bg:#f3f7f8;
+  --card:#ffffff;
+  --ink:#13262b;
+  --mute:#587076;
+  --line:#d3dfe2;
+  --acc:#0a6b76;
+  --acc-ink:#ffffff;
+  --tint:#e2f0f2;
+  --warn:#7a4f00;
+  --warn-bg:#fbeecb;
+  --bad:#a1281f;
+  --border-today:#9ae6b4;
+  --border-past:#fefcbf;
+}
+
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 'Public Sans',system-ui,-apple-system,sans-serif;position:relative;min-height:100vh}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+/* Decoración de fondo con líneas difuminadas amarillas y verdes */
+.bg-decorations {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.blur-line {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(85px);
+  opacity: 0.32;
+  transition: opacity 0.3s ease;
+}
+:root[data-theme="light"] .blur-line { opacity: 0.22; }
+.blur-line.yellow-1 { top: -5%; left: -10%; width: 65vw; height: 110px; background: #eab308; transform: rotate(-12deg); }
+.blur-line.green-1 { top: 38%; right: -15%; width: 70vw; height: 140px; background: #10b981; transform: rotate(15deg); }
+.blur-line.yellow-2 { bottom: 18%; right: 10%; width: 45vw; height: 95px; background: #f59e0b; transform: rotate(20deg); }
+.blur-line.green-2 { bottom: -10%; left: 5%; width: 55vw; height: 120px; background: #059669; transform: rotate(-10deg); }
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:.85rem 1rem}
+.bar{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center}
 .brand{display:flex;align-items:center;gap:.75rem}
 .logo{height:2.8rem;width:auto;max-width:100px;object-fit:contain;border-radius:4px}
 .brand-title{display:flex;flex-direction:column;justify-content:center;line-height:1.15}
