@@ -85,26 +85,13 @@ button,input,textarea{font:inherit;color:inherit}
 .count{color:var(--mute);font-size:.9rem;flex:1 1 auto}
 .search{flex:1 1 100%;min-width:0}
 input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.55rem .7rem}
-
-/* Ajuste de textareas: arrancan en 1 línea y se expanden */
-textarea{
-  min-height:2.35rem;
-  height:2.35rem;
-  resize:none;
-  overflow:hidden;
-  line-height:1.35;
-  transition:height 0.1s ease;
-}
-textarea::placeholder{
-  color:var(--mute);
-  opacity:0.55;
-  font-style:italic;
-}
+textarea{min-height:2.4rem;resize:none;overflow:hidden;line-height:1.35}
+textarea::placeholder{color:var(--mute);opacity:0.6}
 input:disabled,textarea:disabled{opacity:.85;background:var(--bg)}
-.btn{font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--card);padding:.55rem .95rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.4rem}
+.btn{font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--card);padding:.55rem .95rem;cursor:pointer;transition:all .2s ease}
 .btn:hover{border-color:var(--acc)}
 .btn.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
-.btn.success{background:#10b981;color:#ffffff;border-color:#10b981}
+.btn.success{background:#10b981;color:#fff;border-color:#10b981}
 
 /* Botón Deslizable de Modo Claro / Oscuro compacto */
 .theme-toggle-btn {
@@ -198,7 +185,9 @@ main{max-width:1100px;margin:0 auto;padding:1rem}
   .bed{grid-row:span 2;min-height:3.2rem}
 }
 
-#scrim, #copyModalScrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9;backdrop-filter:blur(2px)}
+#scrim, #copyModalScrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9}
+#copyModalScrim{z-index:20}
+
 #panel{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);z-index:10;display:flex;flex-direction:column;background:var(--card);border-left:1px solid var(--line)}
 .ph{padding:calc(.9rem + env(safe-area-inset-top,0px)) 1rem .8rem;border-bottom:1px solid var(--line)}
 .ph h2{margin:0;font-size:1.15rem}
@@ -212,60 +201,63 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
 #msg{margin:0;font-size:.88rem;color:var(--mute)}
 #msg.err{color:var(--bad)}
 
-/* Estilos Modal Copiar */
-#copyModal{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  width:min(480px, 92vw);
-  max-height:85vh;
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:12px;
-  z-index:20;
-  display:flex;
-  flex-direction:column;
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
-  overflow:hidden;
+/* Modal para selección de campos a copiar */
+#copyModal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(480px, 90vw);
+  max-height: 85vh;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  z-index: 21;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  overflow: hidden;
 }
-.copy-modal-header{
-  padding:1rem;
-  border-bottom:1px solid var(--line);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+.copy-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.copy-modal-header h3{margin:0;font-size:1.1rem}
-.copy-modal-body{
-  padding:1rem;
-  overflow-y:auto;
-  display:grid;
-  gap:.6rem;
+.copy-header h3 { margin: 0; font-size: 1.1rem; }
+.copy-body {
+  padding: 1rem;
+  overflow-y: auto;
+  display: grid;
+  gap: .6rem;
+  max-height: 55vh;
 }
-.copy-item{
-  display:flex;
-  align-items:center;
-  gap:.6rem;
-  padding:.45rem .6rem;
-  border-radius:6px;
-  background:var(--bg);
-  cursor:pointer;
-  user-select:none;
+.copy-item {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .4rem .5rem;
+  border-radius: 6px;
+  background: var(--bg);
+  cursor: pointer;
+  user-select: none;
 }
-.copy-item:hover{background:var(--tint)}
-.copy-item input[type="checkbox"]{
-  width:1.1rem;
-  height:1.1rem;
-  cursor:pointer;
-  accent-color:var(--acc);
+.copy-item:hover {
+  background: var(--tint);
 }
-.copy-modal-footer{
-  padding:.8rem 1rem;
-  border-top:1px solid var(--line);
-  display:flex;
-  justify-content:flex-end;
-  gap:.6rem;
+.copy-item input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--acc);
+  cursor: pointer;
+}
+.copy-footer {
+  padding: .8rem 1rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: flex-end;
+  gap: .6rem;
 }
 
 @media (max-width:520px){
@@ -329,7 +321,6 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
   <div id="list"><p class="empty">Cargando pacientes…</p></div>
   <div id="users" hidden></div>
 </main>
-
 <div id="scrim" hidden></div>
 <aside id="panel" hidden aria-label="Ficha del paciente">
   <div class="ph"><h2 id="ptitle"></h2><div class="sub" id="pstate"></div></div>
@@ -359,8 +350,8 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
     </div>
     <div class="acts">
       <button class="btn pri" id="save" type="button">Guardar</button>
-      <button class="btn" id="copyBtn" type="button">📋 Copiar datos</button>
       <button class="btn" id="altaBtn" type="button">Dar de alta</button>
+      <button class="btn" id="copyBtn" type="button">📋 Copiar datos</button>
       <button class="btn" id="reBtn" type="button">Reingresar</button>
       <button class="btn" id="close" type="button">Cerrar</button>
     </div>
@@ -368,19 +359,19 @@ label{display:block;font-size:.85rem;font-weight:600;margin:0 0 .25rem}
   </div>
 </aside>
 
-<!-- Modal Selección de Campos a Copiar -->
+<!-- Modal para Seleccionar Campos a Copiar -->
 <div id="copyModalScrim" hidden></div>
-<div id="copyModal" hidden aria-label="Seleccionar campos a copiar">
-  <div class="copy-modal-header">
-    <h3>Seleccionar campos a copiar</h3>
-    <button class="btn" id="copySelectAllBtn" type="button" style="padding:.2rem .5rem;font-size:.8rem">Marcar todos</button>
+<div id="copyModal" hidden>
+  <div class="copy-header">
+    <h3>Seleccionar campos para copiar</h3>
+    <button class="btn" id="copyCloseBtn" style="padding:.2rem .5rem">✕</button>
   </div>
-  <div class="copy-modal-body" id="copyModalList">
-    <!-- Generado dinámicamente -->
+  <div class="copy-body" id="copyModalList">
+    <!-- Lista generada dinámicamente -->
   </div>
-  <div class="copy-modal-footer">
-    <button class="btn" id="copyCancelBtn" type="button">Cancelar</button>
-    <button class="btn pri" id="copyConfirmBtn" type="button">Copiar Selección</button>
+  <div class="copy-footer">
+    <button class="btn" id="copyCancel">Cancelar</button>
+    <button class="btn pri" id="copyExecute">Copiar seleccionados</button>
   </div>
 </div>
 
@@ -397,8 +388,6 @@ const cfg={
   storageBucket:"pase-cirugia-cetra.firebasestorage.app",
   appId:"1:430963773694:web:3c753dfcdec353cfb495af"
 };
-
-// 3. Campos extendidos con "Examen físico" e "Evolución"
 const FIELDS=[
  {k:'cama',l:'Cama',t:'text'},
  {k:'paciente',l:'Paciente',t:'text'},
@@ -407,8 +396,8 @@ const FIELDS=[
  {k:'ingreso',l:'Ingreso',t:'date'},
  {k:'antecedentes',l:'Antecedentes'},
  {k:'enfermedadActual',l:'Antecedentes enfermedad actual'},
- {k:'examenFisico',l:'Examen físico'},
  {k:'cirugia',l:'Cirugía'},
+ {k:'examenFisico',l:'Examen físico'},
  {k:'evolucion',l:'Evolución'},
  {k:'estudios',l:'Estudios'},
  {k:'cultivos',l:'Cultivos'},
@@ -600,25 +589,11 @@ function render(){
   });
 }
 
-// Helper para autoajustar altura de textarea
-function autoResizeTextarea(el) {
-  if (!el || el.tagName !== 'TEXTAREA') return;
-  el.style.height = 'auto';
-  // Si está vacío, la altura es exactamente 1 línea (~2.35rem)
-  if (!el.value || !el.value.trim()) {
-    el.style.height = '2.35rem';
-  } else {
-    el.style.height = Math.max(el.scrollHeight, 36) + 'px';
-  }
-}
-
 function createField(k, labelText, type, maxLen) {
   const w = document.createElement('div');
   const l = document.createElement('label');
   l.htmlFor = 'f_' + k;
   l.textContent = labelText;
-  
-  // 1 y 2. Si no es tipo text/date, es textarea con placeholder "Sin datos"
   const inp = document.createElement(type ? 'input' : 'textarea');
   inp.id = 'f_' + k;
   if (type) {
@@ -626,8 +601,10 @@ function createField(k, labelText, type, maxLen) {
     inp.autocomplete = 'off';
   } else {
     inp.placeholder = 'Sin datos';
+    inp.rows = 1;
     inp.addEventListener('input', function() {
-      autoResizeTextarea(this);
+      this.style.height = 'auto';
+      this.style.height = (this.scrollHeight) + 'px';
     });
   }
   if (maxLen) inp.maxLength = maxLen;
@@ -680,7 +657,6 @@ function build(){
 
   const fbig = $('fbig');
   fbig.innerHTML = '';
-  // Se renderizan dinámicamente los campos multilínea
   FIELDS.slice(5).forEach(x => {
     fbig.append(createField(x.k, x.l, x.t));
   });
@@ -714,6 +690,103 @@ function build(){
     $('adjuntoStatus').textContent = 'Adjunto marcado para borrar al guardar.';
     renderAdjuntoPreview(null);
   };
+}
+
+function openCopyModal() {
+  const container = $('copyModalList');
+  container.innerHTML = '';
+  
+  const textFields = FIELDS.filter(f => !['cama', 'paciente'].includes(f.k));
+  
+  textFields.forEach(f => {
+    const el = $('f_' + f.k);
+    const val = el ? el.value.trim() : '';
+    const hasData = !!val;
+    
+    const label = document.createElement('label');
+    label.className = 'copy-item';
+    
+    const chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.value = f.k;
+    chk.dataset.label = f.l;
+    chk.checked = false; // Por defecto no hay campos seleccionados
+    
+    const span = document.createElement('span');
+    span.style.fontSize = '.9rem';
+    span.innerHTML = `<strong>${f.l}</strong> ${hasData ? '' : '<small style="opacity:0.6">(sin datos)</small>'}`;
+    
+    label.append(chk, span);
+    container.append(label);
+  });
+
+  $('copyModalScrim').hidden = false;
+  $('copyModal').hidden = false;
+}
+
+function closeCopyModal() {
+  $('copyModalScrim').hidden = true;
+  $('copyModal').hidden = true;
+}
+
+function executeCopy() {
+  const cama = $('f_cama')?.value.trim() || 'Sin Cama';
+  const paciente = $('f_paciente')?.value.trim() || 'Sin Nombre';
+  
+  let textToCopy = `*Hospital Cetrángolo - Pase de Cirugía*\n*${cama} - ${paciente}*\n`;
+  
+  const checkboxes = $('copyModalList').querySelectorAll('input[type="checkbox"]:checked');
+  let count = 0;
+
+  checkboxes.forEach(chk => {
+    const key = chk.value;
+    const label = chk.dataset.label;
+    const el = $('f_' + key);
+    let val = el ? el.value.trim() : '';
+    
+    if (key === 'nacimiento' || key === 'ingreso') {
+      if (val) val = fmt(val);
+    }
+    
+    textToCopy += `\n*${label}:*\n${val || 'Sin datos'}\n`;
+    count++;
+  });
+
+  if (count === 0) {
+    textToCopy += '\n(Sin campos seleccionados)\n';
+  }
+
+  const copyToClipboard = (str) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(str);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = str;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      return new Promise((resolve, reject) => {
+        document.execCommand('copy') ? resolve() : reject();
+        textArea.remove();
+      });
+    }
+  };
+
+  copyToClipboard(textToCopy).then(() => {
+    closeCopyModal();
+    const copyBtn = $('copyBtn');
+    const origText = copyBtn.textContent;
+    copyBtn.textContent = '✓ Datos copiados';
+    copyBtn.classList.add('success');
+    setTimeout(() => {
+      copyBtn.textContent = origText;
+      copyBtn.classList.remove('success');
+    }, 2200);
+  }).catch(() => {
+    alert('No se pudo copiar al portapapeles. Verifique los permisos de su navegador.');
+  });
 }
 
 function openPanel(id){
@@ -765,12 +838,14 @@ function openPanel(id){
 
   $('scrim').hidden=false;$('panel').hidden=false;
   
-  // 1. Autoajuste de altura de textareas según su contenido
   requestAnimationFrame(() => {
     FIELDS.forEach(x => {
       if (!x.t) {
         const el = $('f_' + x.k);
-        if(el) autoResizeTextarea(el);
+        if(el){
+          el.style.height = 'auto';
+          el.style.height = (el.scrollHeight || 38) + 'px';
+        }
       }
     });
   });
@@ -778,114 +853,7 @@ function openPanel(id){
   if(!r&&canWrite)$('f_cama').focus();
 }
 
-function closePanel(){
-  $('panel').hidden=true;
-  $('scrim').hidden=true;
-  cur=null;
-  closeCopyModal();
-}
-
-// 4. Lógica de Copiado con Modal de Selección
-function openCopyModal() {
-  const container = $('copyModalList');
-  container.innerHTML = '';
-  
-  // Excluimos Cama y Paciente ya que se incluyen siempre por defecto en la cabecera
-  const textFields = FIELDS.filter(f => !['cama', 'paciente'].includes(f.k));
-  
-  textFields.forEach(f => {
-    const el = $('f_' + f.k);
-    const val = el ? el.value.trim() : '';
-    const hasData = !!val;
-    
-    const label = document.createElement('label');
-    label.className = 'copy-item';
-    
-    const chk = document.createElement('input');
-    chk.type = 'checkbox';
-    chk.value = f.k;
-    chk.dataset.label = f.l;
-    // Por defecto marcamos si tiene datos
-    chk.checked = hasData;
-    
-    const span = document.createElement('span');
-    span.style.fontSize = '.9rem';
-    span.innerHTML = `<strong>${f.l}</strong> ${hasData ? '' : '<small style="opacity:0.6">(sin datos)</small>'}`;
-    
-    label.append(chk, span);
-    container.append(label);
-  });
-
-  $('copyModalScrim').hidden = false;
-  $('copyModal').hidden = false;
-}
-
-function closeCopyModal() {
-  $('copyModalScrim').hidden = true;
-  $('copyModal').hidden = true;
-}
-
-function executeCopy() {
-  const cama = $('f_cama')?.value.trim() || 'Sin Cama';
-  const paciente = $('f_paciente')?.value.trim() || 'Sin Nombre';
-  
-  // Cabecera: Cama - Paciente
-  let textToCopy = `${cama} - ${paciente}\n`;
-  
-  const checkboxes = $('copyModalList').querySelectorAll('input[type="checkbox"]:checked');
-  let count = 0;
-
-  checkboxes.forEach(chk => {
-    const key = chk.value;
-    const label = chk.dataset.label;
-    const el = $('f_' + key);
-    let val = el ? el.value.trim() : '';
-    
-    if (key === 'nacimiento' || key === 'ingreso') {
-      if (val) val = fmt(val);
-    }
-    
-    textToCopy += `\n${label}\n${val || 'Sin datos'}\n`;
-    count++;
-  });
-
-  if (count === 0) {
-    textToCopy += '\n(Sin campos seleccionados)\n';
-  }
-
-  // Método de copiado compatible
-  const copyToClipboard = (str) => {
-    if (navigator.clipboard && window.isSecureContext) {
-      return navigator.clipboard.writeText(str);
-    } else {
-      const textArea = document.createElement("textarea");
-      textArea.value = str;
-      textArea.style.position = "fixed";
-      textArea.style.left = "-999999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      return new Promise((resolve, reject) => {
-        document.execCommand('copy') ? resolve() : reject();
-        textArea.remove();
-      });
-    }
-  };
-
-  copyToClipboard(textToCopy).then(() => {
-    closeCopyModal();
-    const copyBtn = $('copyBtn');
-    const origText = copyBtn.textContent;
-    copyBtn.textContent = '✓ Datos copiados';
-    copyBtn.classList.add('success');
-    setTimeout(() => {
-      copyBtn.textContent = origText;
-      copyBtn.classList.remove('success');
-    }, 2200);
-  }).catch(() => {
-    alert('No se pudo copiar al portapapeles. Verifique los permisos de su navegador.');
-  });
-}
+function closePanel(){$('panel').hidden=true;$('scrim').hidden=true;cur=null}
 
 async function save(extra){
   if(!col||busy||!canWrite)return;
@@ -942,7 +910,7 @@ async function save(extra){
       const ch=Object.assign({},extra);
       const changedKeys = [];
       FIELDS.forEach(x=>{
-        if(vals[x.k]!==(orig[x.k] || '').trim()){
+        if(vals[x.k]!==orig[x.k].trim()){
           ch[x.k]=vals[x.k];
           changedKeys.push(x.k);
         }
@@ -993,17 +961,11 @@ $('altaNo').onclick=()=>{$('altaBox').hidden=true};
 $('altaOk').onclick=()=>save({estado:'alta',fechaAlta:$('altaDate').value||today()});
 $('reBtn').onclick=()=>save({estado:'activo',fechaAlta:''});
 
-// Eventos del modal de copiado
 $('copyBtn').onclick = openCopyModal;
-$('copyCancelBtn').onclick = closeCopyModal;
+$('copyCloseBtn').onclick = closeCopyModal;
+$('copyCancel').onclick = closeCopyModal;
 $('copyModalScrim').onclick = closeCopyModal;
-$('copyConfirmBtn').onclick = executeCopy;
-$('copySelectAllBtn').onclick = () => {
-  const checkboxes = $('copyModalList').querySelectorAll('input[type="checkbox"]');
-  const allChecked = Array.from(checkboxes).every(c => c.checked);
-  checkboxes.forEach(c => c.checked = !allChecked);
-  $('copySelectAllBtn').textContent = allChecked ? 'Marcar todos' : 'Desmarcar todos';
-};
+$('copyExecute').onclick = executeCopy;
 
 const ok=!cfg.apiKey.startsWith('PEGAR');
 const app=ok?initializeApp(cfg):null,
