@@ -733,7 +733,7 @@ function executeCopy() {
   const cama = $('f_cama')?.value.trim() || 'Sin Cama';
   const paciente = $('f_paciente')?.value.trim() || 'Sin Nombre';
   
-  let textToCopy = `*Hospital Cetrángolo - Pase de Cirugía*\n*${cama} - ${paciente}*\n`;
+  let textToCopy = `*${cama} - ${paciente}*\n`;
   
   const checkboxes = $('copyModalList').querySelectorAll('input[type="checkbox"]:checked');
   let count = 0;
