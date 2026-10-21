@@ -398,7 +398,6 @@ const cfg={
   appId:"1:430963773694:web:3c753dfcdec353cfb495af"
 };
 
-// 3. Campos extendidos con "Examen físico" e "Evolución"
 const FIELDS=[
  {k:'cama',l:'Cama',t:'text'},
  {k:'paciente',l:'Paciente',t:'text'},
@@ -600,11 +599,9 @@ function render(){
   });
 }
 
-// Helper para autoajustar altura de textarea
 function autoResizeTextarea(el) {
   if (!el || el.tagName !== 'TEXTAREA') return;
   el.style.height = 'auto';
-  // Si está vacío, la altura es exactamente 1 línea (~2.35rem)
   if (!el.value || !el.value.trim()) {
     el.style.height = '2.35rem';
   } else {
@@ -618,7 +615,6 @@ function createField(k, labelText, type, maxLen) {
   l.htmlFor = 'f_' + k;
   l.textContent = labelText;
   
-  // 1 y 2. Si no es tipo text/date, es textarea con placeholder "Sin datos"
   const inp = document.createElement(type ? 'input' : 'textarea');
   inp.id = 'f_' + k;
   if (type) {
@@ -680,7 +676,6 @@ function build(){
 
   const fbig = $('fbig');
   fbig.innerHTML = '';
-  // Se renderizan dinámicamente los campos multilínea
   FIELDS.slice(5).forEach(x => {
     fbig.append(createField(x.k, x.l, x.t));
   });
@@ -765,7 +760,6 @@ function openPanel(id){
 
   $('scrim').hidden=false;$('panel').hidden=false;
   
-  // 1. Autoajuste de altura de textareas según su contenido
   requestAnimationFrame(() => {
     FIELDS.forEach(x => {
       if (!x.t) {
@@ -785,12 +779,10 @@ function closePanel(){
   closeCopyModal();
 }
 
-// 4. Lógica de Copiado con Modal de Selección
 function openCopyModal() {
   const container = $('copyModalList');
   container.innerHTML = '';
   
-  // Excluimos Cama y Paciente ya que se incluyen siempre por defecto en la cabecera
   const textFields = FIELDS.filter(f => !['cama', 'paciente'].includes(f.k));
   
   textFields.forEach(f => {
@@ -805,7 +797,6 @@ function openCopyModal() {
     chk.type = 'checkbox';
     chk.value = f.k;
     chk.dataset.label = f.l;
-    // Por defecto marcamos si tiene datos
     chk.checked = hasData;
     
     const span = document.createElement('span');
@@ -829,7 +820,6 @@ function executeCopy() {
   const cama = $('f_cama')?.value.trim() || 'Sin Cama';
   const paciente = $('f_paciente')?.value.trim() || 'Sin Nombre';
   
-  // Cabecera: Cama - Paciente
   let textToCopy = `${cama} - ${paciente}\n`;
   
   const checkboxes = $('copyModalList').querySelectorAll('input[type="checkbox"]:checked');
@@ -853,7 +843,6 @@ function executeCopy() {
     textToCopy += '\n(Sin campos seleccionados)\n';
   }
 
-  // Método de copiado compatible
   const copyToClipboard = (str) => {
     if (navigator.clipboard && window.isSecureContext) {
       return navigator.clipboard.writeText(str);
@@ -993,7 +982,6 @@ $('altaNo').onclick=()=>{$('altaBox').hidden=true};
 $('altaOk').onclick=()=>save({estado:'alta',fechaAlta:$('altaDate').value||today()});
 $('reBtn').onclick=()=>save({estado:'activo',fechaAlta:''});
 
-// Eventos del modal de copiado
 $('copyBtn').onclick = openCopyModal;
 $('copyCancelBtn').onclick = closeCopyModal;
 $('copyModalScrim').onclick = closeCopyModal;
